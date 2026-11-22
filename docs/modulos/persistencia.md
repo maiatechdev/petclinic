@@ -1,6 +1,6 @@
 # Módulo de persistência: Antes e Depois
 
-> **Versão com os PRs integrados.** Descreve a `main` depois do merge dos PRs #43 (remoção de JDBC e JPA), #44 (configuração por ambiente), #48 (driver MySQL) e #51 (testes de persistência). Os resultados de testes vêm das validações em JDK 8 registradas nos PRs, e as métricas de NLOC e de tempo vêm de `docs/metricas.md` (PR #53), medidas com o mesmo comando e ambiente no legado e na versão integrada.
+> **Versão com os PRs integrados.** Descreve a `main` depois do merge dos PRs #43 (remoção de JDBC e JPA), #44 (configuração por ambiente), #48 (driver MySQL), #51 (testes de persistência), #55 (Mockito) e #56 (`java.time`). Os resultados de testes vêm das validações em JDK 8 registradas nos PRs, e as métricas de NLOC e de tempo vêm de `docs/metricas.md` (PR #53), medidas com o mesmo comando e ambiente no legado e na versão integrada.
 
 Responsável: Integrante 1 (issues #23, #24 e #25).
 Base de comparação: commit `df1596b` (tag `v0-legado`).
@@ -89,7 +89,7 @@ public Collection<Owner> findByLastName(@Param("lastName") String lastName);
 | `business-config.xml` | 95 | 59 |
 | `web.xml` | 128 | 109 |
 
-**Explicação técnica.** Sem perfis de persistência, não há mais configuração que dependa de comentar e descomentar blocos de XML, e o comportamento em desenvolvimento e em produção é o mesmo.
+**Explicação técnica.** Sem perfis de persistência, não há mais configuração que dependa de comentar e descomentar blocos de XML. A implementação dos repositórios passou a ser a mesma em todos os ambientes (Spring Data JPA), enquanto o `datasource` continua configurável por ambiente (seção 2.4).
 
 ### 2.3 Testes de serviço (P3)
 
@@ -153,7 +153,7 @@ Para trocar de banco: `-Dpetclinic.db=mysql` (ou `PETCLINIC_DB=mysql`), sem edit
 
 **Explicação técnica.** A configuração que muda entre ambientes sai do código versionado, e nenhuma senha é gravada no repositório: a conta legada `pc` com senha `'pc'` deixou de existir, e a senha do MySQL só existe no ambiente de execução. A aplicação deixou de precisar de privilégios administrativos no startup. Também falha ao iniciar se a senha do MySQL não for informada, em vez de subir com uma credencial vazia.
 
-**Lição do Docker.** Com o MySQL em contêiner, o servidor enxerga a aplicação como um cliente da rede do contêiner, e não como `localhost`. Por isso a conta criada para `'localhost'` foi recusada, e o host virou o placeholder `<HOST>`. O driver 5.1.x também não autentica no MySQL 8, então o roteiro valida e recomenda o MySQL 5.7.
+**Lição do Docker.** Com o MySQL em contêiner, o servidor enxerga a aplicação como um cliente da rede do contêiner, e não como `localhost`. Por isso a conta criada para `'localhost'` foi recusada, e o host virou o placeholder `<HOST>`. O ambiente validado para a comprovação foi o MySQL 5.7.44, e o roteiro o recomenda para reproduzir essa validação. O Connector/J 5.1.49 também conectou ao MySQL 8.0.43 na validação registrada no PR #56, com a conta criada com `mysql_native_password`.
 
 ## 3. Testes que protegem a mudança
 
@@ -174,8 +174,9 @@ Resultados registrados nas revisões, todos em JDK 8 (Corretto 8u514) e Maven 3.
 | Com a configuração por ambiente | 31 | PR #44 |
 | Com os testes de persistência (sobre o #43) | 43 | PR #51 |
 | `main` na revisão `567c797` (26 + 5 + 17) | 48 | PR #52 |
+| `main` em `fe3f003`, depois do #56 (48 + 5 testes de datas) | 53 | PRs #55 e #56 |
 
-Os testes de persistência evitam campos de data de propósito, para continuarem válidos quando o Joda-Time for trocado por `java.time` (issue #26).
+Os testes de persistência evitam campos de data de propósito, para não depender do tipo de data, que foi trocado de Joda-Time para `java.time` na issue #26 (PR #56).
 
 ## 4. Smells tratados (Fowler)
 
@@ -194,5 +195,5 @@ Os testes de persistência evitam campos de data de propósito, para continuarem
 
 - [x] NLOC do Lizard depois da mudança: 40 (PR #53).
 - [x] Tempo da suíte antes e depois, no mesmo ambiente: 2,698 s para 1,657 s na suíte de serviço (PR #53).
-- [x] Total de testes da `main` na revisão `567c797`: 48, sem falhas nem erros, JDK 8 e Maven 3.9.14 (PRs #52 e #53). Repetir o `mvn clean test` na `main` final, depois dos últimos merges.
+- [x] Total de testes da `main` em `fe3f003`: 53, sem falhas nem erros, JDK 8 e Maven 3.9.14 (revisões dos PRs #55 e #46). Repetir o `mvn clean test` na `main` final, depois dos últimos merges.
 - [ ] Reaplicar este documento se a migração para Spring Boot (issue #41) alterar os arquivos de configuração XML e de propriedades.

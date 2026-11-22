@@ -12,7 +12,9 @@
    which can be found here: http://dev.mysql.com/downloads/
 
 2) The MySQL JDBC driver (Connector/J 5.1.49) is already a runtime dependency in pom.xml;
-   nothing to download. Use MySQL 5.7 (the 5.1.x driver cannot authenticate against MySQL 8).
+   nothing to download. Use MySQL 5.7.44, the version validated with this driver. Connector/J
+   5.1.49 was also validated against MySQL 8.0.43 with an account that uses
+   mysql_native_password.
 
 3) As a MySQL administrator, create the PetClinic database and the application user
    by running "db/mysql/createDB.sql" once, after replacing <SENHA> with a password of
