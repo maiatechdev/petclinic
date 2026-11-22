@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -30,11 +32,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * Simple business object representing a pet.
@@ -48,9 +47,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Pet extends NamedEntity {
 
     @Column(name = "birth_date")
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
-    private DateTime birthDate;
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate birthDate;
 
     @ManyToOne
     @JoinColumn(name = "type_id")
@@ -64,11 +62,13 @@ public class Pet extends NamedEntity {
     private Set<Visit> visits;
 
 
-    public void setBirthDate(DateTime birthDate) {
+    /** Sets the pet's calendar date of birth. */
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
-    public DateTime getBirthDate() {
+    /** Returns the pet's calendar date of birth. */
+    public LocalDate getBirthDate() {
         return this.birthDate;
     }
 

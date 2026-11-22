@@ -19,9 +19,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.util.Collection;
-
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,7 +136,7 @@ public abstract class AbstractClinicServiceTests {
 	    pet.setName("bowser");
 	    Collection<PetType> types = this.clinicService.findPetTypes();
 	    pet.setType(EntityUtils.getById(types, PetType.class, 2));
-	    pet.setBirthDate(new DateTime());
+	    pet.setBirthDate(LocalDate.now());
 	    owner6.addPet(pet);
 	    assertEquals(found + 1, owner6.getPets().size());
 	    // both storePet and storeOwner are necessary to cover all ORM tools
