@@ -1,7 +1,11 @@
 
+
 package org.springframework.samples.petclinic.web;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 import java.util.HashMap;
@@ -11,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.bind.support.SessionStatus;
@@ -58,8 +63,7 @@ public class PetControllerTests {
     public void shouldRejectCreationWithEmptyName() {
         Pet pet = createPet("");
 
-        BeanPropertyBindingResult result =
-                new BeanPropertyBindingResult(pet, "pet");
+        BeanPropertyBindingResult result = validate(pet);
 
         String view = controller.processCreationForm(
                 pet, result, sessionStatus);
@@ -72,9 +76,9 @@ public class PetControllerTests {
     @Test
     public void shouldRejectUpdateWithEmptyName() {
         Pet pet = createPet("");
+        pet.setId(1);
 
-        BeanPropertyBindingResult result =
-                new BeanPropertyBindingResult(pet, "pet");
+        BeanPropertyBindingResult result = validate(pet);
 
         String view = controller.processUpdateForm(
                 pet, result, sessionStatus);
@@ -82,6 +86,35 @@ public class PetControllerTests {
         assertEquals("pets/createOrUpdatePetForm", view);
         assertTrue(result.hasFieldErrors("name"));
         verify(clinicService, never()).savePet(pet);
+    }
+
+    @Test
+    public void shouldSavePetOnCreation() {
+        Pet pet = createPet("Rex");
+
+        BeanPropertyBindingResult result = validate(pet);
+
+        String view = controller.processCreationForm(
+                pet, result, sessionStatus);
+
+        assertEquals("redirect:/owners/{ownerId}", view);
+        verify(clinicService).savePet(pet);
+        verify(sessionStatus).setComplete();
+    }
+
+    @Test
+    public void shouldSavePetOnUpdate() {
+        Pet pet = createPet("Rex");
+        pet.setId(1);
+
+        BeanPropertyBindingResult result = validate(pet);
+
+        String view = controller.processUpdateForm(
+                pet, result, sessionStatus);
+
+        assertEquals("redirect:/owners/{ownerId}", view);
+        verify(clinicService).savePet(pet);
+        verify(sessionStatus).setComplete();
     }
 
     @Test
@@ -94,10 +127,17 @@ public class PetControllerTests {
     private Pet createPet(String name) {
         Owner owner = new Owner();
         Pet pet = new Pet();
-
         pet.setName(name);
-        owner.addPet(pet);
 
+        PetType type = new PetType();
+        type.setName("dog");
+        pet.setType(type);
+
+        owner.addPet(pet);
         return pet;
+    }
+
+    private BeanPropertyBindingResult validate(Pet pet) {
+        return new BeanPropertyBindingResult(pet, "pet");
     }
 }
