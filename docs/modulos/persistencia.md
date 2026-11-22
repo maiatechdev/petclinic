@@ -1,6 +1,6 @@
 # Módulo de persistência: Antes e Depois
 
-> **Versão com os PRs integrados.** Descreve a `main` depois do merge dos PRs #43 (remoção de JDBC e JPA), #44 (configuração por ambiente), #48 (driver MySQL) e #51 (testes de persistência). Os resultados de testes vêm das validações em JDK 8 registradas nos PRs. Os campos marcados com `[medir]` (NLOC depois e tempo da suíte) ainda dependem de medição com o mesmo comando e ambiente no Antes e no Depois.
+> **Versão com os PRs integrados.** Descreve a `main` depois do merge dos PRs #43 (remoção de JDBC e JPA), #44 (configuração por ambiente), #48 (driver MySQL) e #51 (testes de persistência). Os resultados de testes vêm das validações em JDK 8 registradas nos PRs, e as métricas de NLOC e de tempo vêm de `docs/metricas.md` (PR #53), medidas com o mesmo comando e ambiente no legado e na versão integrada.
 
 Responsável: Integrante 1 (issues #23, #24 e #25).
 Base de comparação: commit `df1596b` (tag `v0-legado`).
@@ -27,7 +27,7 @@ Linhas efetivas por pacote, contadas com o mesmo método (sem linhas em branco, 
 | `repository.springdatajpa` | 4 | 17 | 17 |
 | **Total** | 14 | **362** | **17** |
 
-Medição com o Lizard (NLOC), segundo o relatório da Etapa 2: JDBC 349, JPA 115 e Spring Data 40 linhas, total 504. Depois: `[medir]` (esperado: 40).
+Medição com o Lizard (NLOC), segundo o relatório da Etapa 2: JDBC 349, JPA 115 e Spring Data 40 linhas, total 504. Depois: **40**, medido no PR #53 com o mesmo Lizard 1.26.1 (o Spring Data permanece com 40 NLOC). O pacote `repository` inteiro, com as interfaces, passa de **541 para 77** NLOC; as outras 37 linhas são as interfaces.
 
 A mesma consulta, "buscar tutores pelo sobrenome", em duas das implementações.
 
@@ -97,10 +97,13 @@ public Collection<Owner> findByLastName(@Param("lastName") String lastName);
 |---|---|---|
 | Classes de teste de serviço | 3 (`Jdbc`, `Jpa`, `SpringDataJpa`) mais `AbstractClinicServiceTests` | 1 (`SpringDataJpa`) mais `AbstractClinicServiceTests` |
 | Execuções dos 10 métodos de `AbstractClinicServiceTests` | 30 (10 x 3 implementações) | 10 |
-| Total de testes executados pelo `mvn clean test` (JDK 8) | 33 no `df1596b` com o ajuste de build (13 métodos, 10 deles repetidos 3 vezes), validado no PR #45 | 26 depois do PR #43, validado no PR #43 |
-| Tempo da suíte de serviço | `[medir]` | `[medir]` |
+| Total de testes executados pelo `mvn clean test` (JDK 8) | 46 imediatamente antes do #43 (os 33 do legado mais 13 testes de controllers dos PRs #47 e #49) | 26 depois do #43 |
+| Soma dos tempos das suítes de serviço (Surefire, mediana de três rodadas) | 2,698 s (legado `df1596b`) | 1,657 s (integrada `567c797`) |
+| Tempo de parede de `mvn clean test` (mediana de três rodadas) | 8,397 s (legado) | 8,183 s (integrada) |
 
-A queda de 33 para 26 corresponde exatamente às 20 execuções repetidas de JDBC e JPA que deixaram de existir. Nenhum cenário foi perdido: os 10 testes de serviço passam uma vez, com Spring Data JPA.
+**Contagem.** O legado executa 33 testes (13 métodos, dos quais 10 de serviço repetidos nas três implementações). Os PRs #47 e #49 acrescentaram 13 testes de controllers, o que leva a 46 imediatamente antes do #43. A remoção das duas suítes de serviço tira **20 execuções** (10 de JDBC e 10 de JPA) e chega a 26. Depois, os PRs #44 (+5) e #51 (+17) levam a 48. Nenhum cenário de serviço foi perdido: os 10 testes passam uma vez, com Spring Data JPA.
+
+**Tempo.** A suíte de serviço caiu cerca de 39% (2,698 s para 1,657 s), coerente com a retirada de 20 execuções. O tempo de parede total variou pouco (8,397 s para 8,183 s) e, como o PR #53 registra, essa diferença pequena não sustenta uma conclusão sobre desempenho da aplicação. Medido em Windows 11, Corretto 8u514, Maven 3.9.14, `mvn -o clean test`, HSQLDB e cache Maven preenchido, alternando a ordem das revisões entre as rodadas.
 
 **Explicação técnica.** A suíte deixa de repetir os mesmos 10 cenários contra implementações que o sistema nunca usa juntas.
 
@@ -166,6 +169,7 @@ Resultados registrados nas revisões, todos em JDK 8 (Corretto 8u514) e Maven 3.
 | Ponto | Testes | Onde |
 |---|---|---|
 | `df1596b` com o ajuste de build | 33 | PR #45 |
+| Imediatamente antes do #43 (legado mais 13 testes de controllers) | 46 | PRs #47 e #49, medido no PR #53 |
 | Depois da remoção de JDBC e JPA | 26 | PR #43 |
 | Com a configuração por ambiente | 31 | PR #44 |
 | Com os testes de persistência (sobre o #43) | 43 | PR #51 |
@@ -188,7 +192,7 @@ Os testes de persistência evitam campos de data de propósito, para continuarem
 
 ## 6. Pendências
 
-- [ ] Medir NLOC com o Lizard antes e depois (`lizard src/main/java/.../repository`), com o mesmo comando e ambiente.
-- [ ] Medir o tempo da suíte antes e depois, no mesmo ambiente.
-- [x] Total de testes da `main` na revisão `567c797`: 48, sem falhas nem erros, JDK 8 e Maven 3.9.14 (registrado no PR #52). Repetir o `mvn clean test` na `main` final, depois dos últimos merges.
+- [x] NLOC do Lizard depois da mudança: 40 (PR #53).
+- [x] Tempo da suíte antes e depois, no mesmo ambiente: 2,698 s para 1,657 s na suíte de serviço (PR #53).
+- [x] Total de testes da `main` na revisão `567c797`: 48, sem falhas nem erros, JDK 8 e Maven 3.9.14 (PRs #52 e #53). Repetir o `mvn clean test` na `main` final, depois dos últimos merges.
 - [ ] Reaplicar este documento se a migração para Spring Boot (issue #41) alterar os arquivos de configuração XML e de propriedades.
