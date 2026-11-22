@@ -1,6 +1,6 @@
 # Módulo de persistência: Antes e Depois
 
-> **Versão com os PRs integrados.** Descreve a `main` depois do merge dos PRs #43 (remoção de JDBC e JPA), #44 (configuração por ambiente), #48 (driver MySQL) e #51 (testes de persistência). Os resultados de testes vêm das validações em JDK 8 registradas nos PRs. Os campos marcados com `[medir]` ainda dependem de medição com o mesmo comando e ambiente no Antes e no Depois.
+> **Versão com os PRs integrados.** Descreve a `main` depois do merge dos PRs #43 (remoção de JDBC e JPA), #44 (configuração por ambiente), #48 (driver MySQL) e #51 (testes de persistência). Os resultados de testes vêm das validações em JDK 8 registradas nos PRs. Os campos marcados com `[medir]` (NLOC depois e tempo da suíte) ainda dependem de medição com o mesmo comando e ambiente no Antes e no Depois.
 
 Responsável: Integrante 1 (issues #23, #24 e #25).
 Base de comparação: commit `df1596b` (tag `v0-legado`).
@@ -169,7 +169,7 @@ Resultados registrados nas revisões, todos em JDK 8 (Corretto 8u514) e Maven 3.
 | Depois da remoção de JDBC e JPA | 26 | PR #43 |
 | Com a configuração por ambiente | 31 | PR #44 |
 | Com os testes de persistência (sobre o #43) | 43 | PR #51 |
-| `main` atual (26 + 5 + 17) | 48 esperados, `[medir]` | a confirmar com `mvn clean test` |
+| `main` na revisão `567c797` (26 + 5 + 17) | 48 | PR #52 |
 
 Os testes de persistência evitam campos de data de propósito, para continuarem válidos quando o Joda-Time for trocado por `java.time` (issue #26).
 
@@ -190,5 +190,5 @@ Os testes de persistência evitam campos de data de propósito, para continuarem
 
 - [ ] Medir NLOC com o Lizard antes e depois (`lizard src/main/java/.../repository`), com o mesmo comando e ambiente.
 - [ ] Medir o tempo da suíte antes e depois, no mesmo ambiente.
-- [ ] Rodar `mvn clean test` na `main` final e confirmar os 48 testes esperados.
+- [x] Total de testes da `main` na revisão `567c797`: 48, sem falhas nem erros, JDK 8 e Maven 3.9.14 (registrado no PR #52). Repetir o `mvn clean test` na `main` final, depois dos últimos merges.
 - [ ] Reaplicar este documento se a migração para Spring Boot (issue #41) alterar os arquivos de configuração XML e de propriedades.
