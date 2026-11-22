@@ -35,7 +35,8 @@ only runs the schema (initDB.sql) and sample data (populateDB.sql), with a user 
 administrative privileges.
 
 The MySQL JDBC driver (Connector/J 5.1.49) is a runtime dependency in pom.xml, so no manual
-edit is needed. Use MySQL 5.7: the 5.1.x driver cannot authenticate against MySQL 8.
+edit is needed. Use MySQL 5.7.44, the version validated with this driver. Connector/J 5.1.49
+was also validated against MySQL 8.0.43 with an account that uses mysql_native_password.
 
 Example with MySQL 5.7 in Docker:
 
