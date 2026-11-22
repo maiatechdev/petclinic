@@ -36,7 +36,6 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -53,7 +52,6 @@ import org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration("WebControllerTests-config.xml")
-@ActiveProfiles("jdbc")
 @Transactional
 public class OwnerVisitControllerTests {
 
