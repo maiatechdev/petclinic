@@ -34,7 +34,7 @@ Passwords are never stored in the repository. Example on Windows:
 	mvn tomcat7:run
 ```
 
-See `src/main/resources/db_readme.txt` for details, including the MySQL driver dependency.
+See `src/main/resources/db_readme.txt` for details, including MySQL in Docker (use MySQL 5.7).
 
 ## Working with Petclinic in Eclipse/STS
 

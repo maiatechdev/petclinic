@@ -10,15 +10,13 @@
 1) Download and install the MySQL database (e.g., MySQL Community Server 5.1.x),
    which can be found here: http://dev.mysql.com/downloads/
 
-2) Download Connector/J, the MySQL JDBC driver (e.g., Connector/J 5.1.x), which
-   can be found here: http://dev.mysql.com/downloads/connector/j/
-   Copy the Connector/J JAR file (e.g., mysql-connector-java-5.1.5-bin.jar) into
-   the db/mysql directory. Alternatively, uncomment the mysql-connector from the
-   Petclinic pom.
+2) The MySQL JDBC driver (Connector/J 5.1.49) is already a runtime dependency in pom.xml;
+   nothing to download. Use MySQL 5.7 (the 5.1.x driver cannot authenticate against MySQL 8).
 
 3) As a MySQL administrator, create the PetClinic database and the application user
    by running "db/mysql/createDB.sql" once, after replacing <SENHA> with a password of
-   your choice. The application user receives only the privileges it needs. The
+   your choice and <HOST> with where the application connects from (localhost for a
+   local MySQL; the address the container sees when MySQL runs in Docker). The application user receives only the privileges it needs. The
    application itself never creates databases or users: at start-up it runs
    "db/mysql/initDB.sql" (tables only) and "db/mysql/populateDB.sql" (sample data).
 

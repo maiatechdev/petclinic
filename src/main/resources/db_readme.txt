@@ -29,8 +29,18 @@ Example (Maven, Tomcat plugin):
   mvn tomcat7:run
 
 Before the first start, a MySQL administrator must create the database and the application
-user with db/mysql/createDB.sql (see db/mysql/petclinic_db_setup_mysql.txt). The application
+user with db/mysql/createDB.sql, replacing <SENHA> (password) and <HOST> (where the application
+connects from: localhost for a local MySQL; the address the container sees for MySQL in Docker) (see db/mysql/petclinic_db_setup_mysql.txt). The application
 only runs the schema (initDB.sql) and sample data (populateDB.sql), with a user that has no
 administrative privileges.
 
-The MySQL JDBC driver dependency is commented out in pom.xml and must be enabled to use MySQL.
+The MySQL JDBC driver (Connector/J 5.1.49) is a runtime dependency in pom.xml, so no manual
+edit is needed. Use MySQL 5.7: the 5.1.x driver cannot authenticate against MySQL 8.
+
+Example with MySQL 5.7 in Docker:
+
+  docker run --name petclinic-mysql -e MYSQL_ROOT_PASSWORD=<admin-password> -p 3306:3306 -d mysql:5.7
+  (run createDB.sql as administrator, with <HOST> set as described above)
+  set PETCLINIC_DB_PASSWORD=<application-password>
+  set MAVEN_OPTS=-Dpetclinic.db=mysql
+  mvn tomcat7:run
