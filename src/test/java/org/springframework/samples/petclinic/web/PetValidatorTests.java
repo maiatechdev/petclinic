@@ -34,7 +34,9 @@ public class PetValidatorTests {
 
     @Test
     public void shouldRejectDuplicateName() {
-        createPet("Rex");
+        Pet existingPet = createPet("Rex");
+        existingPet.setId(1);
+
         Pet pet = createPet("Rex");
 
         BeanPropertyBindingResult errors = validate(pet);
@@ -68,6 +70,30 @@ public class PetValidatorTests {
     @Test
     public void shouldAcceptDefinedType() {
         Pet pet = createPet("Rex");
+
+        BeanPropertyBindingResult errors = validate(pet);
+
+        assertFalse(errors.hasFieldErrors("type"));
+    }
+
+    @Test
+    public void shouldAllowDuplicateNameOnUpdate() {
+        Pet existingPet = createPet("Rex");
+        existingPet.setId(1);
+
+        Pet pet = createPet("Rex");
+        pet.setId(2);
+
+        BeanPropertyBindingResult errors = validate(pet);
+
+        assertFalse(errors.hasFieldErrors("name"));
+    }
+
+    @Test
+    public void shouldAllowMissingTypeOnUpdate() {
+        Pet pet = createPet("Rex");
+        pet.setId(1);
+        pet.setType(null);
 
         BeanPropertyBindingResult errors = validate(pet);
 
