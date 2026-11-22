@@ -18,6 +18,24 @@ You can then access petclinic here: http://localhost:9966/petclinic/
 ## In case you find a bug/suggested improvement for Spring Petclinic
 Our issue tracker is available here: https://github.com/SpringSource/spring-petclinic/issues
 
+## Database configuration
+By default petclinic runs on an in-memory HSQLDB database and needs no setup. The database is chosen by the `petclinic.db` setting, which selects `src/main/resources/spring/data-access-<petclinic.db>.properties`. No XML file needs to be edited.
+
+| Database | How to select | Credentials |
+|---|---|---|
+| HSQLDB (default) | nothing to set | none |
+| MySQL | `-Dpetclinic.db=mysql` or `PETCLINIC_DB=mysql` | `PETCLINIC_DB_PASSWORD` (required), `PETCLINIC_DB_USERNAME` and `PETCLINIC_DB_URL` (optional) |
+
+Passwords are never stored in the repository. Example on Windows:
+
+```
+	set PETCLINIC_DB_PASSWORD=your-password
+	set MAVEN_OPTS=-Dpetclinic.db=mysql
+	mvn tomcat7:run
+```
+
+See `src/main/resources/db_readme.txt` for details, including MySQL in Docker (use MySQL 5.7).
+
 ## Working with Petclinic in Eclipse/STS
 
 ### prerequisites
@@ -65,7 +83,7 @@ File -> Import -> Maven -> Existing Maven project
   </tr>
   <tr>
     <td>Spring MVC Test Framework</td>
-    <td><a href="/src/test/java/org/springframework/samples/petclinic/web/VisitsViewTests.java">VisitsViewTest.java</a></td>
+    <td><a href="/src/test/java/org/springframework/samples/petclinic/web/VetsViewTests.java">VetsViewTests.java</a></td>
   </tr>
   <tr>
     <td>JSP custom tags</td>
@@ -121,27 +139,7 @@ File -> Import -> Maven -> Existing Maven project
     </td>
   </tr>
   <tr>
-    <td>Bean Profiles</td>
-      <td>
-      <a href="/src/main/resources/spring/business-config.xml">business-config.xml</a>
-       <a href="/src/test/java/org/springframework/samples/petclinic/service/ClinicServiceJdbcTests.java">ClinicServiceJdbcTests.java</a>
-       <a href="/src/main/webapp/WEB-INF/web.xml">web.xml</a>
-    </td>
-  </tr>
-  <tr>
-    <td>JdbcTemplate</td>
-    <td>
-      <a href="/src/main/resources/spring/business-config.xml">business-config.xml</a>
-      <a href="/src/main/java/org/springframework/samples/petclinic/repository/jdbc">jdbc folder</a></td>
-  </tr>
-  <tr>
-    <td>JPA</td>
-    <td>
-      <a href="/src/main/resources/spring/business-config.xml">business-config.xml</a>
-      <a href="/src/main/java/org/springframework/samples/petclinic/repository/jpa">jpa folder</a></td>
-  </tr>
-  <tr>
-    <td>Spring Data JPA</td>
+    <td>Spring Data JPA (unica implementacao dos repositorios)</td>
     <td>
       <a href="/src/main/resources/spring/business-config.xml">business-config.xml</a>
       <a href="/src/main/java/org/springframework/samples/petclinic/repository/springdatajpa">springdatajpa folder</a></td>
