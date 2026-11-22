@@ -19,6 +19,5 @@
 3) Create the PetClinic database and user by executing the "db/mysql/createDB.txt"
    script.
 
-4) Open "src/main/resources/spring/jdbc.properties"; comment out all properties in the
-   "HSQL Settings" section; uncomment all properties in the "MySQL Settings"
-   section.
+4) Start the application with -Dpetclinic.db=mysql (or PETCLINIC_DB=mysql) and the
+   PETCLINIC_DB_PASSWORD environment variable set. See src/main/resources/db_readme.txt.
