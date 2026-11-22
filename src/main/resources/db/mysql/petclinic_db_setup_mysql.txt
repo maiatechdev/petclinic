@@ -7,7 +7,8 @@
 
 --------------------------------------------------------------------------------
 
-1) Download and install the MySQL database (e.g., MySQL Community Server 5.1.x),
+1) Download and install the MySQL database (MySQL Community Server 5.7; this is the
+   version validated with the bundled driver),
    which can be found here: http://dev.mysql.com/downloads/
 
 2) The MySQL JDBC driver (Connector/J 5.1.49) is already a runtime dependency in pom.xml;
