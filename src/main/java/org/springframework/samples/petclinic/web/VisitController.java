@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author Juergen Hoeller
@@ -44,44 +43,42 @@ import org.springframework.web.servlet.ModelAndView;
 @SessionAttributes("visit")
 public class VisitController {
 
+    private static final String VIEW_VISIT_FORM = "pets/createOrUpdateVisitForm";
+    private static final String REDIRECT_OWNER_DETAILS = "redirect:/owners/{ownerId}";
+
     private final ClinicService clinicService;
 
-
+    /** Creates a controller backed by the clinic service. */
     @Autowired
     public VisitController(ClinicService clinicService) {
         this.clinicService = clinicService;
     }
 
+    /** Prevents a form submission from changing a visit's ID. */
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("id");
     }
 
+    /** Opens the form with a new visit associated with the requested pet. */
     @RequestMapping(value = "/owners/*/pets/{petId}/visits/new", method = RequestMethod.GET)
     public String initNewVisitForm(@PathVariable("petId") int petId, Map<String, Object> model) {
         Pet pet = this.clinicService.findPetById(petId);
         Visit visit = new Visit();
         pet.addVisit(visit);
         model.put("visit", visit);
-        return "pets/createOrUpdateVisitForm";
+        return VIEW_VISIT_FORM;
     }
 
+    /** Saves a valid visit and returns to the owner's details. */
     @RequestMapping(value = "/owners/{ownerId}/pets/{petId}/visits/new", method = RequestMethod.POST)
     public String processNewVisitForm(@Valid Visit visit, BindingResult result, SessionStatus status) {
         if (result.hasErrors()) {
-            return "pets/createOrUpdateVisitForm";
-        } else {
-            this.clinicService.saveVisit(visit);
-            status.setComplete();
-            return "redirect:/owners/{ownerId}";
+            return VIEW_VISIT_FORM;
         }
-    }
-
-    @RequestMapping(value = "/owners/*/pets/{petId}/visits", method = RequestMethod.GET)
-    public ModelAndView showVisits(@PathVariable int petId) {
-        ModelAndView mav = new ModelAndView("visitList");
-        mav.addObject("visits", this.clinicService.findPetById(petId).getVisits());
-        return mav;
+        this.clinicService.saveVisit(visit);
+        status.setComplete();
+        return REDIRECT_OWNER_DETAILS;
     }
 
 }

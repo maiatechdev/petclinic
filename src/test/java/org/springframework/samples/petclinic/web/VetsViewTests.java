@@ -44,9 +44,9 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("VisitsViewTests-config.xml")
+@ContextConfiguration("WebControllerTests-config.xml")
 @ActiveProfiles("jdbc")
-public class VisitsViewTests {
+public class VetsViewTests {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -58,8 +58,9 @@ public class VisitsViewTests {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
     
+    /** Verifies that the veterinarians are rendered as XML. */
     @Test
-    public void getVisitsXml() throws Exception {
+    public void getVetsXml() throws Exception {
         ResultActions actions = this.mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML));
         actions.andDo(print()); // action is logged into the console
         actions.andExpect(status().isOk());
