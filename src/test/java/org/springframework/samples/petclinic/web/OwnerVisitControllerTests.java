@@ -16,12 +16,13 @@
 package org.springframework.samples.petclinic.web;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,11 +41,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
+import org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler;
 
 /** Characterizes owner and visit requests against the legacy MVC configuration. */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -103,6 +106,14 @@ public class OwnerVisitControllerTests {
         this.mockMvc.perform(get("/owners").param("lastName", "Dav"))
                 .andExpect(status().isOk()).andExpect(view().name("owners/ownersList"))
                 .andExpect(model().attribute("selections", hasSize(2)));
+    }
+
+    /** A search without a last-name parameter lists the fixture owners. */
+    @Test
+    public void listsOwnersWithoutLastName() throws Exception {
+        this.mockMvc.perform(get("/owners"))
+                .andExpect(status().isOk()).andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attribute("selections", hasSize(10)));
     }
 
     /** A valid form creates an owner and redirects to the generated ID. */
@@ -178,14 +189,22 @@ public class OwnerVisitControllerTests {
         assertNull(((Visit) session.getAttribute("visit")).getId());
     }
 
-    /** Captures the missing JSP so issue #30 has a baseline for the list route. */
+    /** The obsolete URL reaches static fallback without invoking a controller or view. */
     @Test
-    public void forwardsVisitListToMissingJsp() throws Exception {
-        String missingJsp = "/WEB-INF/jsp/visitList.jsp";
-        this.mockMvc.perform(get(VISITS)).andExpect(view().name("visitList"))
-                .andExpect(model().attribute("visits", hasSize(2)))
-                .andExpect(forwardedUrl(missingJsp));
-        assertNull(this.context.getServletContext().getResource(missingJsp));
+    public void fallsBackForRemovedVisitList() throws Exception {
+        MvcResult result = this.mockMvc.perform(get(VISITS)).andReturn();
+        assertThat(result.getHandler(), instanceOf(DefaultServletHttpRequestHandler.class));
+        assertNull(result.getModelAndView());
+    }
+
+    /** The owner's details still include the pet's visit history. */
+    @Test
+    public void showsVisitHistoryInOwnerDetails() throws Exception {
+        MvcResult result = this.mockMvc.perform(get(VISIT_OWNER_DETAILS))
+                .andExpect(status().isOk()).andExpect(view().name("owners/ownerDetails"))
+                .andExpect(model().attributeExists("owner")).andReturn();
+        Owner owner = (Owner) result.getModelAndView().getModel().get("owner");
+        assertThat(owner.getPet("Samantha").getVisits(), hasSize(2));
     }
 
     private MockHttpSession openForm(String url, String formView, String attribute) throws Exception {
