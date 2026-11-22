@@ -45,98 +45,107 @@ import org.springframework.web.servlet.ModelAndView;
 @SessionAttributes(types = Owner.class)
 public class OwnerController {
 
+    private static final String VIEW_OWNER_FORM = "owners/createOrUpdateOwnerForm";
+    private static final String VIEW_FIND_OWNERS = "owners/findOwners";
+    private static final String VIEW_OWNERS_LIST = "owners/ownersList";
+    private static final String VIEW_OWNER_DETAILS = "owners/ownerDetails";
+    private static final String REDIRECT_OWNER_DETAILS = "redirect:/owners/";
+
     private final ClinicService clinicService;
 
-
+    /** Creates a controller backed by the clinic service. */
     @Autowired
     public OwnerController(ClinicService clinicService) {
         this.clinicService = clinicService;
     }
 
+    /** Prevents a form submission from changing an owner's ID. */
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("id");
     }
 
+    /** Opens the form with a new owner. */
     @RequestMapping(value = "/owners/new", method = RequestMethod.GET)
     public String initCreationForm(Map<String, Object> model) {
         Owner owner = new Owner();
         model.put("owner", owner);
-        return "owners/createOrUpdateOwnerForm";
+        return VIEW_OWNER_FORM;
     }
 
+    /** On successful creation, redirects to the newly assigned owner ID. */
     @RequestMapping(value = "/owners/new", method = RequestMethod.POST)
     public String processCreationForm(@Valid Owner owner, BindingResult result, SessionStatus status) {
-        if (result.hasErrors()) {
-            return "owners/createOrUpdateOwnerForm";
-        } else {
-            this.clinicService.saveOwner(owner);
-            status.setComplete();
-            return "redirect:/owners/" + owner.getId();
-        }
+        return saveValidOwner(owner, result, status) ? REDIRECT_OWNER_DETAILS + owner.getId() : VIEW_OWNER_FORM;
     }
 
+    /** Opens the owner search form. */
     @RequestMapping(value = "/owners/find", method = RequestMethod.GET)
     public String initFindForm(Map<String, Object> model) {
         model.put("owner", new Owner());
-        return "owners/findOwners";
+        return VIEW_FIND_OWNERS;
     }
 
+    /** Searches by last-name prefix and selects the appropriate result view. */
     @RequestMapping(value = "/owners", method = RequestMethod.GET)
     public String processFindForm(Owner owner, BindingResult result, Map<String, Object> model) {
-
-        // allow parameterless GET request for /owners to return all records
-        if (owner.getLastName() == null) {
-            owner.setLastName(""); // empty string signifies broadest possible search
+        Collection<Owner> results = findOwnersByLastName(owner);
+        if (results.isEmpty()) {
+            result.rejectValue("lastName", "notFound");
+            return VIEW_FIND_OWNERS;
         }
-
-        // find owners by last name
-        Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());
-        if (results.size() < 1) {
-            // no owners found
-            result.rejectValue("lastName", "notFound", "not found");
-            return "owners/findOwners";
-        }
-        if (results.size() > 1) {
-            // multiple owners found
-            model.put("selections", results);
-            return "owners/ownersList";
-        } else {
-            // 1 owner found
-            owner = results.iterator().next();
-            return "redirect:/owners/" + owner.getId();
-        }
+        return showMatchingOwners(results, model);
     }
 
+    /** Loads the existing owner into the edit form. */
     @RequestMapping(value = "/owners/{ownerId}/edit", method = RequestMethod.GET)
     public String initUpdateOwnerForm(@PathVariable("ownerId") int ownerId, Model model) {
         Owner owner = this.clinicService.findOwnerById(ownerId);
         model.addAttribute(owner);
-        return "owners/createOrUpdateOwnerForm";
+        return VIEW_OWNER_FORM;
     }
 
+    /** On successful update, redirects using the owner ID from the request path. */
     @RequestMapping(value = "/owners/{ownerId}/edit", method = RequestMethod.PUT)
     public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, SessionStatus status) {
-        if (result.hasErrors()) {
-            return "owners/createOrUpdateOwnerForm";
-        } else {
-            this.clinicService.saveOwner(owner);
-            status.setComplete();
-            return "redirect:/owners/{ownerId}";
-        }
+        return saveValidOwner(owner, result, status) ? REDIRECT_OWNER_DETAILS + "{ownerId}" : VIEW_OWNER_FORM;
     }
 
     /**
      * Custom handler for displaying an owner.
      *
      * @param ownerId the ID of the owner to display
-     * @return a ModelMap with the model attributes for the view
+     * @return a ModelAndView with the model attributes for the view
      */
     @RequestMapping("/owners/{ownerId}")
     public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
-        ModelAndView mav = new ModelAndView("owners/ownerDetails");
+        ModelAndView mav = new ModelAndView(VIEW_OWNER_DETAILS);
         mav.addObject(this.clinicService.findOwnerById(ownerId));
         return mav;
+    }
+
+    private boolean saveValidOwner(Owner owner, BindingResult result, SessionStatus status) {
+        if (result.hasErrors()) {
+            return false;
+        }
+        this.clinicService.saveOwner(owner);
+        status.setComplete();
+        return true;
+    }
+
+    private Collection<Owner> findOwnersByLastName(Owner owner) {
+        if (owner.getLastName() == null) {
+            owner.setLastName(""); // An empty prefix lists every owner.
+        }
+        return this.clinicService.findOwnerByLastName(owner.getLastName());
+    }
+
+    private String showMatchingOwners(Collection<Owner> results, Map<String, Object> model) {
+        if (results.size() == 1) {
+            return REDIRECT_OWNER_DETAILS + results.iterator().next().getId();
+        }
+        model.put("selections", results);
+        return VIEW_OWNERS_LIST;
     }
 
 }
