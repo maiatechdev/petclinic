@@ -18,6 +18,24 @@ You can then access petclinic here: http://localhost:9966/petclinic/
 ## In case you find a bug/suggested improvement for Spring Petclinic
 Our issue tracker is available here: https://github.com/SpringSource/spring-petclinic/issues
 
+## Database configuration
+By default petclinic runs on an in-memory HSQLDB database and needs no setup. The database is chosen by the `petclinic.db` setting, which selects `src/main/resources/spring/data-access-<petclinic.db>.properties`. No XML file needs to be edited.
+
+| Database | How to select | Credentials |
+|---|---|---|
+| HSQLDB (default) | nothing to set | none |
+| MySQL | `-Dpetclinic.db=mysql` or `PETCLINIC_DB=mysql` | `PETCLINIC_DB_PASSWORD` (required), `PETCLINIC_DB_USERNAME` and `PETCLINIC_DB_URL` (optional) |
+
+Passwords are never stored in the repository. Example on Windows:
+
+```
+	set PETCLINIC_DB_PASSWORD=your-password
+	set MAVEN_OPTS=-Dpetclinic.db=mysql
+	mvn tomcat7:run
+```
+
+See `src/main/resources/db_readme.txt` for details, including the MySQL driver dependency.
+
 ## Working with Petclinic in Eclipse/STS
 
 ### prerequisites
