@@ -1,4 +1,5 @@
 
+
 package org.springframework.samples.petclinic.web;
 
 import static org.junit.Assert.assertEquals;
@@ -10,10 +11,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.samples.petclinic.model.Owner;
@@ -130,7 +131,7 @@ public class PetControllerTests {
         Pet pet = new Pet();
 
         pet.setName(name);
-        pet.setBirthDate(new LocalDate(2020, 5, 10));
+        pet.setBirthDate(LocalDate.of(2020, 5, 10));
 
         PetType type = new PetType();
         type.setName("dog");
@@ -144,4 +145,3 @@ public class PetControllerTests {
         return new BeanPropertyBindingResult(pet, "pet");
     }
 }
-
