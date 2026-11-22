@@ -1,7 +1,9 @@
 
 package org.springframework.samples.petclinic.web;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,22 +30,19 @@ public class PetValidatorTests {
         BeanPropertyBindingResult errors = validate(pet);
 
         assertTrue(errors.hasFieldErrors("name"));
-        assertEquals("required",
-                errors.getFieldError("name").getCode());
+        assertEquals("required", errors.getFieldError("name").getCode());
     }
 
     @Test
     public void shouldRejectDuplicateName() {
-        Pet existingPet = createPet("Rex");
-        existingPet.setId(1);
+        Pet firstPet = createPet("Rex");
+        firstPet.setId(1);
 
-        Pet pet = createPet("Rex");
-
-        BeanPropertyBindingResult errors = validate(pet);
+        Pet newPet = createPet("Rex");
+        BeanPropertyBindingResult errors = validate(newPet);
 
         assertTrue(errors.hasFieldErrors("name"));
-        assertEquals("duplicate",
-                errors.getFieldError("name").getCode());
+        assertEquals("duplicate", errors.getFieldError("name").getCode());
     }
 
     @Test
@@ -54,8 +53,7 @@ public class PetValidatorTests {
         BeanPropertyBindingResult errors = validate(pet);
 
         assertTrue(errors.hasFieldErrors("type"));
-        assertEquals("required",
-                errors.getFieldError("type").getCode());
+        assertEquals("required", errors.getFieldError("type").getCode());
     }
 
     @Test
@@ -78,13 +76,13 @@ public class PetValidatorTests {
 
     @Test
     public void shouldAllowDuplicateNameOnUpdate() {
-        Pet existingPet = createPet("Rex");
-        existingPet.setId(1);
+        Pet firstPet = createPet("Rex");
+        firstPet.setId(1);
 
-        Pet pet = createPet("Rex");
-        pet.setId(2);
+        Pet updatedPet = createPet("Rex");
+        updatedPet.setId(2);
 
-        BeanPropertyBindingResult errors = validate(pet);
+        BeanPropertyBindingResult errors = validate(updatedPet);
 
         assertFalse(errors.hasFieldErrors("name"));
     }
@@ -117,7 +115,6 @@ public class PetValidatorTests {
                 new BeanPropertyBindingResult(pet, "pet");
 
         validator.validate(pet, errors);
-
         return errors;
     }
 }
