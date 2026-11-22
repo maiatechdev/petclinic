@@ -28,4 +28,9 @@ Example (Maven, Tomcat plugin):
   set MAVEN_OPTS=-Dpetclinic.db=mysql
   mvn tomcat7:run
 
+Before the first start, a MySQL administrator must create the database and the application
+user with db/mysql/createDB.sql (see db/mysql/petclinic_db_setup_mysql.txt). The application
+only runs the schema (initDB.sql) and sample data (populateDB.sql), with a user that has no
+administrative privileges.
+
 The MySQL JDBC driver dependency is commented out in pom.xml and must be enabled to use MySQL.

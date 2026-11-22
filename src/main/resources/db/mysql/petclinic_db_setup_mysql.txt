@@ -16,8 +16,12 @@
    the db/mysql directory. Alternatively, uncomment the mysql-connector from the
    Petclinic pom.
 
-3) Create the PetClinic database and user by executing the "db/mysql/createDB.txt"
-   script.
+3) As a MySQL administrator, create the PetClinic database and the application user
+   by running "db/mysql/createDB.sql" once, after replacing <SENHA> with a password of
+   your choice. The application user receives only the privileges it needs. The
+   application itself never creates databases or users: at start-up it runs
+   "db/mysql/initDB.sql" (tables only) and "db/mysql/populateDB.sql" (sample data).
 
 4) Start the application with -Dpetclinic.db=mysql (or PETCLINIC_DB=mysql) and the
-   PETCLINIC_DB_PASSWORD environment variable set. See src/main/resources/db_readme.txt.
+   PETCLINIC_DB_PASSWORD environment variable set to the password chosen in step 3
+   (PETCLINIC_DB_USERNAME defaults to "petclinic"). See src/main/resources/db_readme.txt.
