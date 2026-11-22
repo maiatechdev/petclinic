@@ -11,7 +11,7 @@
 	<properties>
 
 		<!-- Generic properties -->
-		<java.version>1.6</java.version>
+		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -443,6 +443,16 @@
 					<port>9966</port>
 					<path>/petclinic</path>
 				</configuration>
+				<dependencies>
+					<!-- The JSP compiler bundled with tomcat7-maven-plugin 2.0 (2012) cannot read Java 8
+						classes (JasperException: type java.util.Map$Entry cannot be resolved).
+						ECJ 4.4.2 replaces it. -->
+					<dependency>
+						<groupId>org.eclipse.jdt.core.compiler</groupId>
+						<artifactId>ecj</artifactId>
+						<version>4.4.2</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
