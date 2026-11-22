@@ -42,6 +42,27 @@ public class DataAccessPropertiesTests {
     }
 
     @Test
+    public void mysqlSchemaScriptHasNoAccountOrPasswordStatements() throws IOException {
+        InputStream in = DataAccessPropertiesTests.class.getResourceAsStream("/db/mysql/initDB.sql");
+        assertTrue("missing initDB.sql", in != null);
+        try {
+            java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            String sql = out.toString("UTF-8").toUpperCase();
+            assertFalse(sql.contains("GRANT "));
+            assertFalse(sql.contains("IDENTIFIED BY"));
+            assertFalse(sql.contains("CREATE USER"));
+            assertFalse(sql.contains("CREATE DATABASE"));
+        } finally {
+            in.close();
+        }
+    }
+
+    @Test
     public void mysqlUsesItsOwnSchemaScripts() throws IOException {
         Properties mysql = load("mysql");
         assertTrue(mysql.getProperty("jdbc.initLocation").contains("db/mysql/"));
