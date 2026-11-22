@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -103,6 +104,15 @@ public class PetVisitDateTests {
                 .param("date", "2024/02/30"))
                 .andExpect(status().isOk()).andExpect(view().name(VISIT_FORM))
                 .andExpect(model().attributeHasFieldErrors("visit", "date"));
+    }
+
+    /** Reads existing SQL DATE rows without shifting the calendar date. */
+    @Test
+    public void readsSeedDatesWithoutTimeZoneShift() {
+        Pet pet = this.entityManager.find(Pet.class, 7);
+        Visit visit = this.entityManager.find(Visit.class, 4);
+        assertEquals(LocalDate.of(2012, 9, 4), pet.getBirthDate());
+        assertEquals(LocalDate.of(2013, 1, 4), visit.getDate());
     }
 
     private MockHttpSession openForm(String path, String formView) throws Exception {
