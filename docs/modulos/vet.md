@@ -68,8 +68,10 @@ return entries;
 ## 5. Testes que comprovam o comportamento
 
 - `VetControllerTests`: `/vets.html`, `/vets` com `Accept: application/xml`, `/vets.xml` e `/vets.atom`.
-- `ClinicServiceCacheTests`: a segunda chamada a `findVets` devolve a mesma instância e o
-  resultado fica no cache `vets`. Retirando o `@Cacheable`, os dois testes falham.
+- `ClinicServiceCacheTests`: usa o cache real do `tools-config.xml` com repositórios do
+  Mockito (`ClinicServiceCacheTests-config.xml`). Duas chamadas a `findVets` geram uma única
+  chamada a `VetRepository.findAll()`, e o resultado fica no cache `vets`. Retirando o
+  `@Cacheable`, os dois testes falham.
 - Os testes foram escritos antes da refatoração e passaram sem alteração depois dela.
   `mvn clean test`: 67 testes antes do módulo(no momento que foi executado), 73 depois.
 
