@@ -1,5 +1,4 @@
 /*
-/*
  * Copyright 2002-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,9 +22,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Simple domain object representing a list of veterinarians. Mostly here to be used for the 'vets' {@link
- * org.springframework.web.servlet.view.xml.MarshallingView}.
- *
+ * List of veterinarians used as the JAXB root element of the XML view ({@code /vets.xml}). The Atom view reads the
+ * same object from the model.
+ * 
  * @author Arjen Poutsma
  */
 @XmlRootElement
@@ -33,6 +32,11 @@ public class Vets {
 
     private List<Vet> vets;
 
+    /**
+     * Returns the veterinarians, creating the list on first access.
+     *
+     * @return the mutable list of veterinarians, never {@code null}
+     */
     @XmlElement
     public List<Vet> getVetList() {
         if (vets == null) {
