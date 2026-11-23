@@ -1,22 +1,36 @@
 # Spring PetClinic Sample Application
 
 ## What does it look like?
--spring-petclinic has been deployed here on cloudfoundry: http://demo-spring-petclinic.cfapps.io/
+The public demo that used to run on cfapps.io is no longer available. Run the application locally as described below and open it in your browser.
 
 
 ## Understanding the Spring Petclinic application with a few diagrams
 <a href="https://speakerdeck.com/michaelisvy/spring-petclinic-sample-application">See the presentation here</a>
 
 ## Running petclinic locally
+This project is based on the 2014 version of Spring PetClinic (tag `v0-legado`). It needs:
+* JDK 8. Newer JDKs cannot build it, so `java -version` must show `1.8`.
+* Maven 3 (tested with 3.9.9).
+
 ```
-	git clone https://github.com/SpringSource/spring-petclinic.git
+	git clone https://github.com/maiatechdev/petclinic.git
+	cd petclinic
 	mvn tomcat7:run
 ```
 
 You can then access petclinic here: http://localhost:9966/petclinic/
 
+If another JDK is the default on Windows, point the current terminal to JDK 8 before running Maven. The path below is only an example; use the folder where JDK 8 is installed on your machine:
+
+```
+	set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-8.0.442.6-hotspot
+	set PATH=%JAVA_HOME%\bin;%PATH%
+```
+
+To run the tests: `mvn clean test`
+
 ## In case you find a bug/suggested improvement for Spring Petclinic
-Our issue tracker is available here: https://github.com/SpringSource/spring-petclinic/issues
+Open an issue in this repository: https://github.com/maiatechdev/petclinic/issues
 
 ## Database configuration
 By default petclinic runs on an in-memory HSQLDB database and needs no setup. The database is chosen by the `petclinic.db` setting, which selects `src/main/resources/spring/data-access-<petclinic.db>.properties`. No XML file needs to be edited.
@@ -52,7 +66,7 @@ If m2e is not there, just follow the install process here: http://eclipse.org/m2
 
 1) In the command line
 ```
-git clone https://github.com/SpringSource/spring-petclinic.git
+git clone https://github.com/maiatechdev/petclinic.git
 ```
 2) Inside Eclipse
 ```

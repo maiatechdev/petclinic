@@ -15,16 +15,16 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.joda.time.DateTime;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * Simple JavaBean domain object representing a visit.
@@ -39,9 +39,8 @@ public class Visit extends BaseEntity {
      * Holds value of property date.
      */
     @Column(name = "visit_date")
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
-    private DateTime date;
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate date;
 
     /**
      * Holds value of property description.
@@ -62,7 +61,7 @@ public class Visit extends BaseEntity {
      * Creates a new instance of Visit for the current date
      */
     public Visit() {
-        this.date = new DateTime();
+        this.date = LocalDate.now();
     }
 
 
@@ -71,7 +70,7 @@ public class Visit extends BaseEntity {
      *
      * @return Value of property date.
      */
-    public DateTime getDate() {
+    public LocalDate getDate() {
         return this.date;
     }
 
@@ -80,7 +79,7 @@ public class Visit extends BaseEntity {
      *
      * @param date New value of property date.
      */
-    public void setDate(DateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

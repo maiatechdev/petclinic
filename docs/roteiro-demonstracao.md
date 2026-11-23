@@ -26,13 +26,15 @@ Abra um terminal em cada cópia, selecione o **JDK 8**, confirme com `mvn.cmd -v
 
 | Tempo | Quem | O que mostrar e dizer |
 |---|---|---|
-| 0:00–0:50 | Gabriel | Identificar as revisões e abrir as duas páginas iniciais. Explicar que o projeto evoluiu a mesma aplicação Spring MVC e preservou os fluxos de tutores, pets e visitas. |
-| 0:50–2:50 | Kezia | Mostrar `mvn -version` com JDK 8 e a alteração Java 1.8/ECJ no POM. Explicar que o ajuste permite ao Tomcat 7 compilar as JSPs na cópia legada e deixa visível o problema específico da rota de visitas. |
-| 2:50–5:15 | Davi | Buscar `Davis` nos dois lados e mostrar Betty e Harold. Em seguida abrir a rota isolada de visitas no legado, identificar o JSP ausente e mostrar onde o histórico e o cadastro de visita ficam na versão integrada. Mostrar os 13 testes de controllers e a complexidade de `processFindForm` de 4 para 2. |
-| 5:15–7:15 | Gabriel | Mostrar no código as três implementações de persistência no legado e o Spring Data JPA na integrada. Mostrar `petclinic.db`, o script com `<HOST>` e `<SENHA>` e o resultado da execução com MySQL 5.7 em Docker. |
-| 7:15–9:15 | Integrante 4 | Mostrar cadastro e validação de pet no estado da revisão apresentada. Vincular as mudanças de domínio à entrega integrada correspondente ou apresentá-las como trabalho planejado. |
-| 9:15–11:15 | Integrante 5 | Mostrar `/vets.html` e `/vets.xml`, com o mesmo conjunto de veterinários. Mostrar JSON somente se o endpoint da #36 estiver disponível na revisão usada e tiver sido testado. |
+| 0:00–0:50 | Gabriel Maia (Integrante 1) | Identificar as revisões e abrir as duas páginas iniciais. Explicar que o projeto evoluiu a mesma aplicação Spring MVC e preservou os fluxos de tutores, pets e visitas. |
+| 0:50–2:50 | Kezia (Integrante 2) | Mostrar `mvn -version` com JDK 8 e a alteração Java 1.8/ECJ no POM. Explicar que o ajuste permite ao Tomcat 7 compilar as JSPs na cópia legada e deixa visível o problema específico da rota de visitas. |
+| 2:50–5:15 | Davi (Integrante 3) | Buscar `Davis` nos dois lados e mostrar Betty e Harold. Em seguida abrir a rota isolada de visitas no legado, identificar o JSP ausente e mostrar onde o histórico e o cadastro de visita ficam na versão integrada. Mostrar os 13 testes de controllers e a complexidade de `processFindForm` de 4 para 2. |
+| 5:15–7:15 | Gabriel Maia (Integrante 1) | Mostrar no código as três implementações de persistência no legado e o Spring Data JPA na integrada. Mostrar `petclinic.db`, o script com `<HOST>` e `<SENHA>` e o resultado da execução com MySQL 5.7 em Docker. |
+| 7:15–9:15 | Gabriel Torre (Integrante 4) | Mostrar cadastro e validação de pet no estado da revisão apresentada. Vincular as mudanças de domínio à entrega integrada correspondente ou apresentá-las como trabalho planejado. |
+| 9:15–11:15 | Leo (Integrante 5) | Mostrar `/vets.html` e `/vets.xml`, com o mesmo conjunto de veterinários. Mostrar JSON somente se o endpoint da #36 estiver disponível na revisão usada e tiver sido testado. |
 | 11:15–12:45 | Equipe | Exibir a [tabela de métricas](metricas.md), explicar a contagem de testes e resumir o próximo passo de modularização. |
+
+Há dois integrantes chamados Gabriel. Na tabela, **Gabriel Maia** é o Integrante 1 (abertura e persistência) e **Gabriel Torre** é o Integrante 4 (domínio). Cada integrante apresenta cerca de dois minutos e deve conseguir explicar o próprio módulo sem ler. Se alguém não puder estar presente, o grupo define antes do ensaio quem cobre a parte dele, para o tempo total de 12 min 45 s não mudar.
 
 ## Sequências para mostrar na tela
 
