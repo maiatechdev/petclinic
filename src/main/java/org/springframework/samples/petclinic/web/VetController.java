@@ -24,6 +24,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
+ * Exibe a lista de veterinários.
+ * <p>
+ * O mesmo método atende {@code /vets.html}, {@code /vets.xml} e {@code /vets.atom}. O
+ * {@code ContentNegotiatingViewResolver} de {@code mvc-view-config.xml} escolhe o JSP, a view XML ou a
+ * {@link VetsAtomView} pela extensão da URL; sem extensão, a resposta é sempre HTML.
+ *
  * @author Juergen Hoeller
  * @author Mark Fisher
  * @author Ken Krebs
@@ -32,23 +38,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class VetController {
 
+    /** Nome lógico da view, compartilhado pelas representações HTML, XML e Atom. */
+    static final String VIEWS_VET_LIST = "vets/vetList";
+
+    /** Atributo do modelo lido pelo JSP, pela view XML e pela {@link VetsAtomView}. */
+    static final String MODEL_VETS = "vets";
+
     private final ClinicService clinicService;
 
-
+    /**
+     * Cria o controller.
+     *
+     * @param clinicService serviço que consulta os veterinários
+     */
     @Autowired
     public VetController(ClinicService clinicService) {
         this.clinicService = clinicService;
     }
 
+    /**
+     * Coloca todos os veterinários no modelo.
+     *
+     * @param model modelo que recebe o atributo {@value #MODEL_VETS}
+     * @return o nome lógico da view, {@value #VIEWS_VET_LIST}
+     */
     @RequestMapping("/vets")
     public String showVetList(Map<String, Object> model) {
         // Here we are returning an object of type 'Vets' rather than a collection of Vet objects 
         // so it is simpler for Object-Xml mapping
         Vets vets = new Vets();
         vets.getVetList().addAll(this.clinicService.findVets());
-        model.put("vets", vets);
-        return "vets/vetList";
+        model.put(MODEL_VETS, vets);
+        return VIEWS_VET_LIST;
     }
-
 
 }
