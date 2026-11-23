@@ -98,6 +98,16 @@ public class ClinicServiceImpl implements ClinicService {
         petRepository.save(pet);
     }
 
+    /**
+     * Devolve todos os veterinários; a partir da segunda chamada, o resultado vem do cache {@code vets}.
+     * <p>
+     * O cache é declarado aqui por {@link Cacheable}, ativado por {@code <cache:annotation-driven/>} em
+     * {@code tools-config.xml} (carregado pelo {@code web.xml}) e configurado em {@code cache/ehcache.xml}: as
+     * entradas expiram em 60 segundos e o cache guarda no máximo 100 elementos.
+     *
+     * @return todos os veterinários com suas especialidades
+     * @throws DataAccessException se a consulta falhar
+     */
     @Override
     @Transactional(readOnly = true)
     @Cacheable(value = "vets")
