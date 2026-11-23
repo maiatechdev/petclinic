@@ -17,9 +17,9 @@ Versões lidas do `pom.xml` da `main`.
 | Componente | Atual | Situação | Alvo sugerido | Etapa |
 |---|---|---|---|---|
 | Java | 1.8 (era 1.6) | Atualizado no PR #45 | 17 ou superior | E5 |
-| Spring Framework | 4.0.6 | Fim de suporte | 4.3.x (última 4.x) e depois Boot | E2, E5 |
-| Spring Data JPA | 1.6.2 | Fim de suporte | 1.11.x e depois a versão do Boot | E2, E5 |
-| Hibernate ORM | 4.3.6 | Fim de suporte | 4.3.11 e depois a versão do Boot | E2, E5 |
+| Spring Framework | 4.0.6 | Fim de suporte | 4.3.30.RELEASE (última 4.x, dez/2020) e depois Boot | E2, E5 |
+| Spring Data JPA | 1.6.2 | Fim de suporte | 1.11.23.RELEASE (ago/2019) e depois a versão do Boot | E2, E5 |
+| Hibernate ORM | 4.3.6 | Fim de suporte | 4.3.11.Final (ago/2015) e depois a versão do Boot | E2, E5 |
 | Hibernate Validator | 4.3.1 | Fim de suporte | Versão do Boot | E5 |
 | Pacotes `javax.*` | em uso (JPA, validação, servlet) | Legado | `jakarta.*` | E5 |
 | Servidor | Tomcat 7 (plugin 2.0), servlet 7.0.30 | Fim de suporte | Tomcat embarcado do Boot | E5 |
@@ -27,7 +27,7 @@ Versões lidas do `pom.xml` da `main`.
 | Camada de visão | JSP 2.2 e JSTL 1.2, duas tags próprias | Pouco usada em novos projetos | Thymeleaf | E5 |
 | Configuração | 5 XMLs e `web.xml` (447 linhas) | Verbosa | `application.properties` e classes `@Configuration` | E5 |
 | Cache | Ehcache 2.6.9 | Fim de suporte | Caffeine pela abstração do Spring | E3 |
-| Datas | Joda-Time 2.4, Jadira 3.2.0, `joda-time-hibernate`, `joda-time-jsptags` | Substituídos por `java.time` | `java.time` com `AttributeConverter` | E1 |
+| Datas | Joda-Time 2.4, Jadira 3.2.0, `joda-time-hibernate`, `joda-time-jsptags` | Substituídos por `java.time` (concluído no PR #56) | `java.time` com `AttributeConverter` | E1 |
 | Interface | Bootstrap 2.3.0, jQuery 2.0.3, jQuery UI 1.10.3 (WebJars) | Fim de suporte | Bootstrap 5 e jQuery 3 | E4 |
 | Tabelas | Dandelion DataTables 0.10.0 | Descontinuado | Tabela HTML simples ou DataTables direto | E4 |
 | Atom e XML | Rome 1.0, JAXB 2.2.7 | Antigos | Rome atual e `jakarta.xml.bind`, ou Jackson XML | E5 |
@@ -38,11 +38,13 @@ Versões lidas do `pom.xml` da `main`.
 | Plugins Maven | compiler 3.0, surefire 2.13, war 2.3, assembly 2.4, eclipse 2.9 | Muito antigos | Versões atuais, `maven-eclipse-plugin` removido | E2 |
 | CI | Não há workflow | Sem automação | GitHub Actions com JDK 8 e 17 | E7 |
 
+O detalhe das mudanças já feitas no `pom.xml` (Java, ECJ, driver do MySQL, Joda-Time e Mockito) está em `docs/modulos/plataforma.md`. As versões da E2 foram conferidas no Maven Central.
+
 Referência de destino: o `spring-petclinic` upstream atual usa Java 17, Spring Boot 4.1.0, Spring Framework 7, Hibernate ORM 7.4, Thymeleaf 3.1 e Bootstrap 5.3 pelos WebJars.
 
 ## 3. Princípios
 
-1. **Rede de proteção primeiro** (Feathers). A `main` tem 48 testes, incluindo 13 de controllers e 17 de consultas. Nenhuma etapa começa com a suíte vermelha.
+1. **Rede de proteção primeiro** (Feathers). A `main` tem 75 testes (eram 33 no legado), incluindo 13 de controllers de tutores e visitas, 17 de consultas, 6 de veterinários e cache e 2 de mensagens. Nenhuma etapa começa com a suíte vermelha.
 2. **Uma etapa por vez**, em PRs pequenos, com o sistema rodando ao final de cada uma.
 3. **Medir antes e depois** (Lizard, jscpd, número de testes, tempo de execução), como foi feito em `docs/metricas.md`.
 4. **Reversível:** cada etapa pode ser desfeita revertendo seus PRs, sem depender das seguintes.
@@ -58,18 +60,20 @@ Referência de destino: o `spring-petclinic` upstream atual usa Java 17, Spring 
 | Spring Data JPA como única implementação de repositório (removidas JDBC e JPA, 345 linhas efetivas) | #43 |
 | Banco selecionado por `petclinic.db`, credenciais por ambiente, `createDB.sql` separado do esquema | #44 |
 | Driver MySQL 5.1.49 como dependência runtime | #48 |
-| Testes de controllers (13) e de consultas (17); Mockito (#55) | #47, #49, #51 |
+| Testes de controllers (13), de consultas (17), de datas, de veterinários e cache (6) e de mensagens (2); Mockito | #47, #49, #51, #55, #56, #61, #67 |
+| Datas: Joda-Time e Jadira para `java.time`, com a correção do defeito de fuso (E1) | #56 |
+| Refatoração do módulo de veterinários | #62 |
+| Mensagens em português e Javadoc do `ClinicService` | #67, #68 |
 
-### E1. Datas: Joda-Time e Jadira para `java.time` (issue #26)
+### E1. Datas: Joda-Time e Jadira para `java.time` (concluída, issue #26)
 
-- **Mudança:** `Pet.birthDate` e `Visit.date` passam a `java.time.LocalDate`, com `AttributeConverter` (JPA 2.1) no lugar do Jadira. Remove `joda-time`, `joda-time-hibernate`, `joda-time-jsptags` e `jadira`.
-- **Por que primeiro:** é pequena, não depende de nada e é pré-requisito do Hibernate 5 e do Spring Boot, que não têm suporte ao Jadira nem ao Joda como base.
-- **Risco:** médio. Toca `Pet`, `Visit`, os JSP com `fmt` e o `@DateTimeFormat`. **Aceite:** nenhum `org.joda` ou `org.jadira` restante, 48 testes verdes, cadastro de pet e de visita funcionando.
-- **Esforço:** 3 a 5 h.
+- **Resultado:** `Pet.birthDate` e `Visit.date` passaram a `java.time.LocalDate`, com `AttributeConverter` (JPA 2.1) no lugar do Jadira (PR #56). Joda-Time, `joda-time-hibernate`, `joda-time-jsptags` e Jadira saíram do `pom.xml`, e o defeito de fuso (2012-09-04 aparecendo como 09-03) foi corrigido.
+- **Por que primeiro:** era pequena, não dependia de nada e é pré-requisito do Hibernate 5 e do Spring Boot, que não têm suporte ao Jadira nem ao Joda como base.
+- **Aceite cumprido:** nenhum `org.joda` ou `org.jadira` restante, suíte verde (53 testes naquele ponto, 75 hoje) e cadastro de pet e de visita funcionando.
 
 ### E2. Atualizações dentro da mesma geração
 
-- **Mudança:** Spring Framework 4.0.6 para 4.3.x, Spring Data JPA 1.6 para 1.11.x, Hibernate 4.3.6 para 4.3.11, Logback e SLF4J (patch), plugins Maven (compiler, surefire, war), remoção do `maven-eclipse-plugin`.
+- **Mudança:** Spring Framework 4.0.6 para 4.3.30, Spring Data JPA 1.6.2 para 1.11.23, Hibernate 4.3.6 para 4.3.11, Logback e SLF4J (patch), plugins Maven (compiler, surefire, war), remoção do `maven-eclipse-plugin`.
 - **Por que:** ganha correções de segurança e de compatibilidade com Java 8 sem trocar de API, o que prepara o terreno para a migração maior.
 - **Risco:** baixo a médio. **Aceite:** suíte verde, telas conferidas no Tomcat, sem aviso novo de depreciação relevante.
 - **Esforço:** 2 a 4 h.
@@ -129,7 +133,7 @@ Maior etapa. Executar em uma branch única, integrando só no final, nesta ordem
 
 ```mermaid
 flowchart LR
-    E0[E0 concluída] --> E1[E1 java.time]
+    E0[E0 concluída] --> E1[E1 java.time, concluída]
     E1 --> E2[E2 mesma geração]
     E2 --> E5[E5 Spring Boot e Java 17]
     E3[E3 cache] --> E5
@@ -152,7 +156,8 @@ A E3 e a E4 são independentes e podem andar em paralelo com a E1 e a E2. A E7 d
 | Migração sem tempo ou sem pessoas | Alta | Médio | Etapas pequenas e independentes (E1 a E4); go/no-go por tempo na E5 |
 | Banco: diferenças entre HSQLDB, MySQL e PostgreSQL | Média | Médio | Testcontainers e Flyway por dialeto; MySQL 5.7 já comprovado no PR #44 |
 | Dependência GPL do Connector/J 5.1 | Baixa | Médio | Avaliar o MariaDB Connector ou o MySQL Connector/J atual com a licença do projeto |
-| Perda de comportamento na refatoração | Média | Alto | Mudanças mecânicas separadas das de comportamento; 48 testes de regressão |
+| Perda de comportamento na refatoração | Média | Alto | Mudanças mecânicas separadas das de comportamento; 75 testes de regressão |
+| A E2 não elimina as vulnerabilidades conhecidas | Alta | Médio | Spring 4.3.30 ainda tem 1 vulnerabilidade conhecida e todo o Hibernate 4.3, inclusive o 4.3.11, tem 2 (segundo o Maven Central). Tratar a E2 como melhoria parcial: a segurança só se resolve na E5 |
 
 ## 7. Priorização e estimativas
 
@@ -160,7 +165,7 @@ Estimativas do grupo, **não** medições. Prioridade pelo valor e pelo risco.
 
 | Prioridade | Etapas | Esforço total |
 |---|---|---|
-| Deve (próximo ciclo) | E1, E2, E3, E7 (CI) | 9 a 15 h |
+| Deve (próximo ciclo) | E2, E3, E7 (CI) | 6 a 10 h |
 | Deveria | E4, E5, E6 | 28 a 40 h |
 | Poderia | E7 (segurança), E8 | 16 a 26 h |
 
@@ -168,11 +173,11 @@ Estimativas do grupo, **não** medições. Prioridade pelo valor e pelo risco.
 
 | Item do plano | Estado |
 |---|---|
-| E0 (Java 8, Spring Data único, configuração por ambiente, driver, testes) | Entregue e validada em JDK 8 (48 testes) |
-| E1 (`java.time`) | Em andamento (#26) |
+| E0 (Java 8, Spring Data único, configuração por ambiente, driver, testes, veterinários, mensagens e Javadoc) | Entregue e validada em JDK 8 (75 testes) |
+| E1 (`java.time`) | Concluída (PR #56) |
 | E2 a E8 | Planejadas; a E5 não foi executada nesta entrega (decisão na #41) |
 
-Resultado medido da E0, em `docs/metricas.md`: 504 para 40 linhas nas implementações de persistência, Javadoc de 17,7% para 29,5% e 33 para 48 testes.
+Resultado medido da E0, em `docs/metricas.md`: 504 para 40 linhas nas implementações de persistência, Javadoc de 17,7% para 45,5% (45 de 99 métodos públicos, depois do PR #68; 29,5% foi a medição intermediária em `567c797`) e 33 para 75 testes.
 
 ## 9. Critérios de pronto, por etapa
 
@@ -183,7 +188,8 @@ Resultado medido da E0, em `docs/metricas.md`: 504 para 40 linhas nas implementa
 
 ## 10. Pendências do rascunho
 
-- [ ] Confirmar no Maven Central as versões alvo da E2 e da E5.
+- [x] Versões alvo da E2 conferidas no Maven Central (revisão da Kezia no PR #57).
+- [ ] Confirmar as versões alvo da E5 (Spring Boot e Java 17) se a migração for retomada.
 - [ ] Revisar as estimativas com o grupo.
 - [ ] Decidir quem assume a redação final (issue #27).
-- [ ] Atualizar a seção 8 quando a #26 for mergeada.
+- [x] Seção 8 atualizada com o merge da #26 (PR #56).
