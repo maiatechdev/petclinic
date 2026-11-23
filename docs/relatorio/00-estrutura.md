@@ -34,14 +34,14 @@ Soma da meta: cerca de 13 páginas, folgada em relação ao mínimo de 8 para ab
 
 | Parte | Arquivo | Estado |
 |---|---|---|
-| Capa, 1 e 3, e 5.1 | `docs/relatorio/integrante-1-introducao-e-persistencia.md` | PR #58 aberto, a reescrever com as palavras do autor |
-| 4.1, 5.2 e 6 (modularização) | `docs/relatorio/integrante-3-arquitetura-e-web.md` | Na `main` (PR #52) |
-| 2 (fundamentação) | a criar | Sem rascunho |
-| 4.2 e 5.3 | a criar | Sem rascunho |
-| 5.4 | `docs/modulos/plataforma.md` | PR #66 aberto (dados). O texto do relatório ainda não existe |
-| 5.5 | `docs/modulos/vet.md` (PR #62) e `docs/modulos/servico-mensagens-pt.md` (PR #68) | Dados nos PRs abertos. O texto do relatório não existe |
-| 6 (atualização tecnológica) | `docs/plano-atualizacao.md` | PR #57 aberto |
-| 7 e 8 | a criar | Sem rascunho |
+| Capa, 1, 3 e 5.1 | `docs/relatorio/integrante-1-introducao-e-persistencia.md` | PR #58 aberto, a reescrever com as palavras do autor |
+| 2, 5.4 e 6.2 (atualização tecnológica) | `docs/relatorio/integrante-2-fundamentacao-e-plataforma.md` | Na `main` (PR #70) |
+| 4.1, 5.2 e 6.1 (modularização) | `docs/relatorio/integrante-3-arquitetura-e-web.md` | Na `main` (PR #52) |
+| 4.2 e 5.3 | `docs/relatorio/integrante-4-debito-tecnico-e-dominio.md` | PR #71 aberto, em correção |
+| 5.4 (dados) | `docs/modulos/plataforma.md` | Na `main` (PR #66) |
+| 5.5 (dados) | `docs/modulos/vet.md` e `docs/modulos/servico-mensagens-pt.md` | Na `main` (PRs #62 e #68). O texto do relatório da Integrante 5 ainda não foi entregue |
+| 6.2 (dados) | `docs/plano-atualizacao.md` | PR #57 aprovado, aguardando ajustes |
+| 7 e 8 | a criar | Sem rascunho (Integrante 5) |
 
 ## 4. Onde estão os dados de cada seção
 
@@ -53,7 +53,7 @@ Soma da meta: cerca de 13 páginas, folgada em relação ao mínimo de 8 para ab
 
 **5.4 Plataforma (Kezia).** Dados: `docs/modulos/plataforma.md` (PR #66) e `docs/modulos/plataforma-datas.md`. Pontos: Java 1.6 para 1.8, ECJ no plugin do Tomcat, driver MySQL, Mockito, Joda-Time fora, e o defeito de fuso (a data 2012-09-04 aparecia como 09-03).
 
-**5.5 Veterinários, documentação e mensagens (Leo).** Dados: `docs/modulos/vet.md`, os testes de `VetControllerTests` e de cache, `docs/modulos/servico-mensagens-pt.md`, `messages_pt.properties` e o Javadoc do `ClinicService`. Pontos: o cache `@Cacheable` nunca tinha sido testado; o código morto do `VetsAtomView`; Javadoc de 17,7% para 29,5% (ver `metricas.md`, e o valor atualizado depois do #68).
+**5.5 Veterinários, documentação e mensagens (Leo).** Dados: `docs/modulos/vet.md`, os testes de `VetControllerTests` e de cache, `docs/modulos/servico-mensagens-pt.md`, `messages_pt.properties` e o Javadoc do `ClinicService`. Pontos: o cache `@Cacheable` nunca tinha sido testado; o código morto do `VetsAtomView`; Javadoc de 17,7% (22 de 124 métodos públicos) no legado para **45,5%** (45 de 99) depois do #68; os 29,5% do `metricas.md` são uma medição intermediária, em `567c797`.
 
 **6. Planos de evolução (Davi e Kezia).** Dados: `docs/plano-modularizacao.md` e `docs/plano-atualizacao.md` (E0 a E8, riscos e estimativas). A migração para Spring Boot **não foi executada**: ver a decisão registrada na issue #41.
 
