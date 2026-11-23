@@ -98,6 +98,17 @@ public class PetValidatorTests {
         assertFalse(errors.hasFieldErrors("type"));
     }
 
+    @Test
+    public void shouldRejectNullBirthDate() {
+        Pet pet = createPet("Rex");
+        pet.setBirthDate(null);
+
+        BeanPropertyBindingResult errors = validate(pet);
+
+        assertTrue(errors.hasFieldErrors("birthDate"));
+        assertEquals("required", errors.getFieldError("birthDate").getCode());
+    }
+
     private Pet createPet(String name) {
         Pet pet = new Pet();
         pet.setName(name);
