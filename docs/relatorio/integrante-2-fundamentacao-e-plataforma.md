@@ -6,9 +6,9 @@
 
 Depois de entregue, um sistema continua mudando. Aparecem novos requisitos, defeitos e o ambiente em que ele roda também muda, com novas versões de sistema operacional, de linguagem e de bibliotecas. A evolução faz parte do ciclo de vida do software e em sistemas usados por muitos anos a maior parte do custo total costuma estar na manutenção, e não no desenvolvimento inicial (SOMMERVILLE, 2019).
 
-Essas mudanças podem ser de três tipos: a manutenção corretiva (corrige defeitos); a adaptativa (ajusta o sistema a um novo ambiente, como outra versão da plataforma ou outro banco de dados) e a evolutiva (acrescenta ou melhora funcionalidades)(SOMMERVILLE, 2019).
+Essas mudanças podem ser de três tipos: a manutenção corretiva (corrige defeitos); a adaptativa (ajusta o sistema a um novo ambiente, como outra versão da plataforma ou outro banco de dados) e a evolutiva (acrescenta ou melhora funcionalidades) (SOMMERVILLE, 2019).
 
-Chamamos de sistema legado aquele que ainda tem valor para quem o usa, mas foi construído com tecnologias que ficaram obsoletas e por isso se tornou difícil e arriscado de modificar. Para lidar com ele, Sommerville aponta quatro caminhos: descartar o sistema, continuar mantendo-o como está, reestruturá-lo por meio de reengenharia ou substituí-lo. A escolha depende do valor do sistema para o negócio e da sua qualidade técnica.
+Chamamos de sistema legado aquele que ainda tem valor para quem o usa, mas foi construído com tecnologias que ficaram obsoletas e por isso se tornou difícil e arriscado de modificar. Para lidar com ele, Sommerville (2019) aponta quatro caminhos: descartar o sistema, continuar mantendo-o como está, reestruturá-lo por meio de reengenharia ou substituí-lo. A escolha depende do valor do sistema para o negócio e da sua qualidade técnica.
 
 O Spring PetClinic de 2014 é um exemplo de sistema legado. Ele usava Java 1.6, Spring 4.0 e Tomcat 7, tecnologias sem suporte hoje, mas as suas funcionalidades continuam fazendo sentido. Por isso, o grupo optou pela reestruturação: manter o que o sistema faz e modernizar a sua base. Durante o trabalho, apareceram dois dos tipos de manutenção descritos acima. A migração para o Java 8 foi uma manutenção adaptativa, e a correção das datas de nascimento e de visita, que apareciam na tela com um dia a menos, foi uma manutenção corretiva.
 
