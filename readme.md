@@ -20,7 +20,7 @@ This project is based on the 2014 version of Spring PetClinic (tag `v0-legado`).
 
 You can then access petclinic here: http://localhost:9966/petclinic/
 
-If another JDK is the default on Windows, point the current terminal to JDK 8 before running Maven:
+If another JDK is the default on Windows, point the current terminal to JDK 8 before running Maven. The path below is only an example; use the folder where JDK 8 is installed on your machine:
 
 ```
 	set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-8.0.442.6-hotspot
@@ -31,6 +31,7 @@ To run the tests: `mvn clean test`
 
 ## In case you find a bug/suggested improvement for Spring Petclinic
 Open an issue in this repository: https://github.com/maiatechdev/petclinic/issues
+
 ## Database configuration
 By default petclinic runs on an in-memory HSQLDB database and needs no setup. The database is chosen by the `petclinic.db` setting, which selects `src/main/resources/spring/data-access-<petclinic.db>.properties`. No XML file needs to be edited.
 
