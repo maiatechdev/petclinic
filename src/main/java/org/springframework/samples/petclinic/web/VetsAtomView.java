@@ -31,42 +31,49 @@ import com.sun.syndication.feed.atom.Entry;
 import com.sun.syndication.feed.atom.Feed;
 
 /**
- * A view creating a Atom representation from a list of Visit objects.
+ * Atom feed of the veterinarians, rendered for {@code /vets.atom}.
+ * <p>
+ * Registered in {@code mvc-view-config.xml} under the bean name {@code vets/vetList.atom}. The response content type
+ * ({@code application/atom+xml}) is set by {@link AbstractAtomFeedView} after the entries are built.
  *
  * @author Alef Arendsen
  * @author Arjen Poutsma
  */
 public class VetsAtomView extends AbstractAtomFeedView {
 
+    private static final String TAG_AUTHORITY = "tag:springsource.org";
+    private static final String FEED_TITLE = "Veterinarians";
+
+    /** Sets the feed id and title. */
     @Override
     protected void buildFeedMetadata(Map<String, Object> model, Feed feed, HttpServletRequest request) {
-        feed.setId("tag:springsource.org");
-        feed.setTitle("Veterinarians");
+        feed.setId(TAG_AUTHORITY);
+        feed.setTitle(FEED_TITLE);
     }
 
+    /** Creates one feed entry for each veterinarian in the {@code vets} model attribute. */
     @Override
     protected List<Entry> buildFeedEntries(Map<String, Object> model,
-                                           HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        Vets vets = (Vets) model.get("vets");
-        List<Vet> vetList = vets.getVetList();
+                                           HttpServletRequest request, HttpServletResponse response) {
+        List<Vet> vetList = ((Vets) model.get(VetController.MODEL_VETS)).getVetList();
         List<Entry> entries = new ArrayList<Entry>(vetList.size());
-
         for (Vet vet : vetList) {
-            Entry entry = new Entry();
-            // see http://diveintomark.org/archives/2004/05/28/howto-atom-id#other
-            entry.setId(String.format("tag:springsource.org,%s", vet.getId()));
-            entry.setTitle(String.format("Vet: %s %s", vet.getFirstName(), vet.getLastName()));
-
-            Content summary = new Content();
-            summary.setValue(vet.getSpecialties().toString());
-            entry.setSummary(summary);
-
-            entries.add(entry);
+            entries.add(toEntry(vet));
         }
-        response.setContentType("blabla");
         return entries;
+    }
 
+    /** Builds the feed entry of one veterinarian, with the specialties as summary. */
+    private Entry toEntry(Vet vet) {
+        Entry entry = new Entry();
+        // see http://diveintomark.org/archives/2004/05/28/howto-atom-id#other
+        entry.setId(String.format("%s,%s", TAG_AUTHORITY, vet.getId()));
+        entry.setTitle(String.format("Vet: %s %s", vet.getFirstName(), vet.getLastName()));
+
+        Content summary = new Content();
+        summary.setValue(vet.getSpecialties().toString());
+        entry.setSummary(summary);
+        return entry;
     }
 
 }

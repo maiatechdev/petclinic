@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Contexto do ClinicServiceCacheTests: o cache real do tools-config.xml e um ClinicServiceImpl
+    com repositorios falsos (Mockito), para contar quantas vezes o VetRepository e consultado.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="classpath:spring/tools-config.xml"/>
+
+    <bean id="clinicService" class="org.springframework.samples.petclinic.service.ClinicServiceImpl">
+        <constructor-arg ref="petRepository"/>
+        <constructor-arg ref="vetRepository"/>
+        <constructor-arg ref="ownerRepository"/>
+        <constructor-arg ref="visitRepository"/>
+    </bean>
+
+    <bean id="vetRepository" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.springframework.samples.petclinic.repository.VetRepository"/>
+    </bean>
+
+    <bean id="petRepository" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.springframework.samples.petclinic.repository.PetRepository"/>
+    </bean>
+
+    <bean id="ownerRepository" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.springframework.samples.petclinic.repository.OwnerRepository"/>
+    </bean>
+
+    <bean id="visitRepository" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.springframework.samples.petclinic.repository.VisitRepository"/>
+    </bean>
+
+</beans>
