@@ -39,7 +39,7 @@ Owner findOwnerById(int id) throws DataAccessException;
 
 ```properties
 welcome=Bem-vindo
-duplicate=já está em uso
+duplicate=j\u00e1 est\u00e1 em uso
 ```
 
 ## 4. Explicação técnica
@@ -53,7 +53,7 @@ duplicate=já está em uso
   português passa a ver as boas-vindas e as mensagens de validação traduzidas, sem mudança de
   configuração.
 - **Codificação.** O `ResourceBundleMessageSource` do Java 8 lê arquivos `.properties` em
-  ISO-8859-1. Por isso os acentos estão escritos como escapes Unicode (`á` = `á`). Um
+  ISO-8859-1. Por isso os acentos estão escritos como escapes Unicode (`\u00e1` = `á`). Um. Um
   arquivo salvo em UTF-8 com acentos diretos apareceria com caracteres trocados na tela.
 - **Fora do escopo.** A troca de idioma por um link na tela e a extração dos textos fixos dos
   JSPs (menu, títulos e botões continuam em inglês) ficaram de fora. Os JSPs serão substituídos
@@ -70,7 +70,7 @@ duplicate=já está em uso
 
 No Tomcat, um navegador em português (`Accept-Language: pt-BR`) viu "Bem-vindo" na página
 inicial e "já está em uso" ao cadastrar um animal com nome repetido; um navegador em inglês
-continuou vendo "Welcome". `mvn clean test`: 67 testes antes, 69 depois.
+continuou vendo "Welcome". `mvn clean test`: 73 testes antes, 75 depois.
 
 ## 6. Métricas
 
@@ -80,7 +80,8 @@ Javadoc contado como em [`docs/metricas.md`](../metricas.md): árvore sintática
 | Métrica | Antes | Depois |
 |---|---|---|
 | Métodos com Javadoc em `ClinicService` | 0/8 (0%) | 8/8 (100%) |
-| Métodos públicos com Javadoc, produção | 34/99 (34,3%) | 42/99 (42,4%) |
+| Métodos públicos com Javadoc, produção | 37/99 (37,4%) | 45/99 (45,5%) |
 | Idiomas com tradução | inglês, alemão | inglês, alemão, português |
 | Testes de tradução | 0 | 2 |
 
+O "antes" é a `main` com o PR #62, que já documentou o módulo de veterinários.
