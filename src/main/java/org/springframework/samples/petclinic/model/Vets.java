@@ -22,8 +22,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Lista de veterinários usada como elemento raiz JAXB da view XML ({@code /vets.xml}). A view Atom lê o mesmo objeto do modelo.
- *
+ * List of veterinarians used as the JAXB root element of the XML view ({@code /vets.xml}). The Atom view reads the
+ * same object from the model.
+ * 
  * @author Arjen Poutsma
  */
 @XmlRootElement
@@ -32,9 +33,9 @@ public class Vets {
     private List<Vet> vets;
 
     /**
-     * Devolve os veterinários, criando a lista no primeiro acesso.
+     * Returns the veterinarians, creating the list on first access.
      *
-     * @return a lista mutável de veterinários, nunca {@code null}
+     * @return the mutable list of veterinarians, never {@code null}
      */
     @XmlElement
     public List<Vet> getVetList() {

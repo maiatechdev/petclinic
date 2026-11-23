@@ -99,14 +99,14 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     /**
-     * Devolve todos os veterinários; a partir da segunda chamada, o resultado vem do cache {@code vets}.
+     * Returns all veterinarians; from the second call on, the result comes from the {@code vets} cache.
      * <p>
-     * O cache é declarado aqui por {@link Cacheable}, ativado por {@code <cache:annotation-driven/>} em
-     * {@code tools-config.xml} (carregado pelo {@code web.xml}) e configurado em {@code cache/ehcache.xml}: as
-     * entradas expiram em 60 segundos e o cache guarda no máximo 100 elementos.
+     * The cache is declared here by {@link Cacheable}, enabled by {@code <cache:annotation-driven/>} in
+     * {@code tools-config.xml} (loaded by {@code web.xml}) and configured in {@code cache/ehcache.xml}: entries
+     * expire after 60 seconds and the cache holds at most 100 elements.
      *
-     * @return todos os veterinários com suas especialidades
-     * @throws DataAccessException se a consulta falhar
+     * @return all veterinarians with their specialties
+     * @throws DataAccessException if the query fails
      */
     @Override
     @Transactional(readOnly = true)

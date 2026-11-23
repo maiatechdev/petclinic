@@ -24,11 +24,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Exibe a lista de veterinários.
+  * Shows the list of veterinarians.
  * <p>
- * O mesmo método atende {@code /vets.html}, {@code /vets.xml} e {@code /vets.atom}. O
- * {@code ContentNegotiatingViewResolver} de {@code mvc-view-config.xml} escolhe o JSP, a view XML ou a
- * {@link VetsAtomView} pela extensão da URL; sem extensão, a resposta é sempre HTML.
+ * The same handler serves {@code /vets.html}, {@code /vets.xml} and {@code /vets.atom}. The
+ * {@code ContentNegotiatingViewResolver} in {@code mvc-view-config.xml} picks the JSP, the XML view or
+ * {@link VetsAtomView} from the URL extension; without an extension the response is always HTML.
  *
  * @author Juergen Hoeller
  * @author Mark Fisher
@@ -38,18 +38,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class VetController {
 
-    /** Nome lógico da view, compartilhado pelas representações HTML, XML e Atom. */
+    /** Logical view name shared by the HTML, XML and Atom representations. */
     static final String VIEWS_VET_LIST = "vets/vetList";
 
-    /** Atributo do modelo lido pelo JSP, pela view XML e pela {@link VetsAtomView}. */
+    /** Model attribute read by the JSP, the XML view and {@link VetsAtomView}. */
     static final String MODEL_VETS = "vets";
 
     private final ClinicService clinicService;
 
     /**
-     * Cria o controller.
+     * Creates the controller.
      *
-     * @param clinicService serviço que consulta os veterinários
+     * @param clinicService service that loads the veterinarians
      */
     @Autowired
     public VetController(ClinicService clinicService) {
@@ -57,10 +57,10 @@ public class VetController {
     }
 
     /**
-     * Coloca todos os veterinários no modelo.
+     * Puts all veterinarians in the model.
      *
-     * @param model modelo que recebe o atributo {@value #MODEL_VETS}
-     * @return o nome lógico da view, {@value #VIEWS_VET_LIST}
+     * @param model model that receives the {@value #MODEL_VETS} attribute
+     * @return the logical view name, {@value #VIEWS_VET_LIST}
      */
     @RequestMapping("/vets")
     public String showVetList(Map<String, Object> model) {

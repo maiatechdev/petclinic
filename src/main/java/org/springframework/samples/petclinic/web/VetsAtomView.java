@@ -31,10 +31,10 @@ import com.sun.syndication.feed.atom.Entry;
 import com.sun.syndication.feed.atom.Feed;
 
 /**
- * Feed Atom dos veterinários, gerado para {@code /vets.atom}.
+ * Atom feed of the veterinarians, rendered for {@code /vets.atom}.
  * <p>
- * Registrada em {@code mvc-view-config.xml} com o nome de bean {@code vets/vetList.atom}. O content type da resposta
- * ({@code application/atom+xml}) é definido pela {@link AbstractAtomFeedView} depois que as entradas são montadas.
+ * Registered in {@code mvc-view-config.xml} under the bean name {@code vets/vetList.atom}. The response content type
+ * ({@code application/atom+xml}) is set by {@link AbstractAtomFeedView} after the entries are built.
  *
  * @author Alef Arendsen
  * @author Arjen Poutsma
@@ -44,14 +44,14 @@ public class VetsAtomView extends AbstractAtomFeedView {
     private static final String TAG_AUTHORITY = "tag:springsource.org";
     private static final String FEED_TITLE = "Veterinarians";
 
-    /** Define o id e o título do feed */
+    /** Sets the feed id and title. */
     @Override
     protected void buildFeedMetadata(Map<String, Object> model, Feed feed, HttpServletRequest request) {
         feed.setId(TAG_AUTHORITY);
         feed.setTitle(FEED_TITLE);
     }
 
-    /** Cria uma entrada do feed para cada veterinário do atributo {@code vets} do modelo. */
+    /** Creates one feed entry for each veterinarian in the {@code vets} model attribute. */
     @Override
     protected List<Entry> buildFeedEntries(Map<String, Object> model,
                                            HttpServletRequest request, HttpServletResponse response) {
@@ -63,7 +63,7 @@ public class VetsAtomView extends AbstractAtomFeedView {
         return entries;
     }
 
-    /** Monta a entrada do feed de um veterinário, com as especialidades no resumo. */
+    /** Builds the feed entry of one veterinarian, with the specialties as summary. */
     private Entry toEntry(Vet vet) {
         Entry entry = new Entry();
         // see http://diveintomark.org/archives/2004/05/28/howto-atom-id#other
