@@ -4,11 +4,9 @@
 
 ### 2.1 Evolução e manutenção de software
 
-### 2.1 Evolução e manutenção de software
+Depois de entregue, um sistema continua mudando. Aparecem novos requisitos, defeitos e o ambiente em que ele roda também muda, com novas versões de sistema operacional, de linguagem e de bibliotecas. A evolução faz parte do ciclo de vida do software e em sistemas usados por muitos anos a maior parte do custo total costuma estar na manutenção, e não no desenvolvimento inicial (SOMMERVILLE, 2019).
 
-Depois de entregue, um sistema continua mudando. Aparecem novos requisitos, defeitos e o ambiente em que ele roda também muda, com novas versões de sistema operacional, de linguagem e de bibliotecas. A evolução faz parte do ciclo de vida do software e em sistemas usados por muitos anos a maior parte do custo total costuma estar na manutenção, e não no desenvolvimento inicial.
-
-Essas mudanças podem ser de três tipos: a manutenção corretiva (corrige defeitos); a adaptativa (ajusta o sistema a um novo ambiente, como outra versão da plataforma ou outro banco de dados) e a evolutiva (acrescenta ou melhora funcionalidades).
+Essas mudanças podem ser de três tipos: a manutenção corretiva (corrige defeitos); a adaptativa (ajusta o sistema a um novo ambiente, como outra versão da plataforma ou outro banco de dados) e a evolutiva (acrescenta ou melhora funcionalidades)(SOMMERVILLE, 2019).
 
 Chamamos de sistema legado aquele que ainda tem valor para quem o usa, mas foi construído com tecnologias que ficaram obsoletas e por isso se tornou difícil e arriscado de modificar. Para lidar com ele, Sommerville aponta quatro caminhos: descartar o sistema, continuar mantendo-o como está, reestruturá-lo por meio de reengenharia ou substituí-lo. A escolha depende do valor do sistema para o negócio e da sua qualidade técnica.
 
