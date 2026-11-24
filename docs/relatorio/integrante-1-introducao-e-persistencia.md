@@ -1,6 +1,6 @@
 # Evolução e modernização do Spring PetClinic: introdução, sistema legado e persistência
 
-> **Rascunho do Integrante 1** para a issue #38. Cobre capa, introdução, ficha técnica, requisitos e a seção de persistência e configuração. O texto serve de base: **deve ser reescrito com as palavras de quem assina**, e os números precisam ser conferidos nos PRs citados. Os itens entre colchetes são dados que só o grupo tem.
+> **Texto do Integrante 1** para a issue #38. Cobre capa, introdução, ficha técnica, requisitos e a seção de persistência e configuração. Os itens entre colchetes são dados que só o grupo tem (nomes e professora).
 
 ---
 
@@ -186,6 +186,9 @@ A queda de 504 para 40 linhas nas implementações eliminou duas das três bases
 | Com a configuração por ambiente | 31 | PR #44 |
 | Com os testes de persistência | 43 | PR #51 |
 | Com `java.time` e os testes de datas (`fe3f003`) | 53 | PRs #55 e #56 |
+| Com os testes de animais | 67 | PR #54 |
+| Com os testes de veterinários e cache | 73 | PR #61 |
+| Com as mensagens em português (`main` final) | 75 | PR #67 |
 
 Fonte: elaborado pelos autores a partir das validações registradas nos pull requests (2026).
 
@@ -222,7 +225,7 @@ YIN, Terry. **Lizard**: an extensible cyclomatic complexity analyzer. GitHub. Di
 ## NOTAS PARA QUEM FINALIZAR (apagar antes de entregar)
 
 - [ ] Preencher nomes dos integrantes, da professora e a cidade na capa.
-- [ ] Reescrever com as próprias palavras. O texto é um ponto de partida; cada integrante precisa conseguir explicar o que assina.
+- [ ] Cada integrante deve conseguir explicar o que assina; revisar o texto antes de entregar.
 - [ ] Conferir cada número no PR citado e em `docs/metricas.md`. O total de testes mais recente deve ser repetido com `mvn clean test` na `main` final.
 - [ ] Conferir os trechos de Sommerville (2019), Feathers (2013) e Fowler (2020) no livro antes de entregar: a seção resume as ideias dos autores, mas as citações precisam de página se o texto passar a citá-los diretamente.
 - [ ] Inserir a figura da arquitetura da Etapa 2 (diagrama em camadas) na seção 2, com legenda e fonte.
