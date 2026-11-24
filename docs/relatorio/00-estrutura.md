@@ -34,14 +34,14 @@ Soma da meta: cerca de 13 páginas, folgada em relação ao mínimo de 8 para ab
 
 | Parte | Arquivo | Estado |
 |---|---|---|
-| Capa, 1, 3 e 5.1 | `docs/relatorio/integrante-1-introducao-e-persistencia.md` | PR #58 aberto, a reescrever com as palavras do autor |
+| Capa, 1, 3 e 5.1 | `docs/relatorio/integrante-1-introducao-e-persistencia.md` | Na `main` (PR #58) |
 | 2, 5.4 e 6.2 (atualização tecnológica) | `docs/relatorio/integrante-2-fundamentacao-e-plataforma.md` | Na `main` (PR #70) |
 | 4.1, 5.2 e 6.1 (modularização) | `docs/relatorio/integrante-3-arquitetura-e-web.md` | Na `main` (PR #52) |
-| 4.2 e 5.3 | `docs/relatorio/integrante-4-debito-tecnico-e-dominio.md` | PR #71 aberto, em correção |
+| 4.2 e 5.3 | `docs/relatorio/integrante-4-debito-tecnico-e-dominio.md` | PR #71 aberto, aguardando correção dos números da 4.2 e do estado dos testes da 5.3. Os testes de `PetTypeFormatter` e de data nula entraram na `main` pelo PR #73, que complementa os do PR #54 |
 | 5.4 (dados) | `docs/modulos/plataforma.md` | Na `main` (PR #66) |
-| 5.5 (dados) | `docs/modulos/vet.md` e `docs/modulos/servico-mensagens-pt.md` | Na `main` (PRs #62 e #68). O texto do relatório da Integrante 5 ainda não foi entregue |
-| 6.2 (dados) | `docs/plano-atualizacao.md` | PR #57 aprovado, aguardando ajustes |
-| 7 e 8 | a criar | Sem rascunho (Integrante 5) |
+| 5.5 (dados) | `docs/modulos/vet.md` e `docs/modulos/servico-mensagens-pt.md` | Na `main` (PRs #62 e #68). O texto do relatório está no quadro de 5.5, 7 e 8, abaixo |
+| 6.2 (dados) | `docs/plano-atualizacao.md` | Na `main` (PR #57) |
+| 5.5, 7 e 8 | `docs/relatorio/integrante-5-veterinarios-viabilidade-conclusao.md` | Na `main` (PR #72) |
 
 ## 4. Onde estão os dados de cada seção
 
@@ -65,7 +65,7 @@ Soma da meta: cerca de 13 páginas, folgada em relação ao mínimo de 8 para ab
 
 - **Termos:** usar "tutor" (não *owner*), "animal" (não *pet*) e "visita", como na Etapa 2. Nomes de classes e métodos continuam em inglês, em fonte monoespaçada.
 - **Quadros e figuras:** numeração contínua no relatório todo (Quadro 1, 2, 3...), título acima, e **Fonte** abaixo ("Fonte: elaborado pelos autores (2026)" ou a ferramenta usada). Hoje cada rascunho começa a numeração do zero.
-- **Medidas:** usar os números de `docs/metricas.md` e citar o PR de onde vêm. Total de testes por ponto no tempo: 33 (legado), 46, 26, 31, 43, 53, 67, e o valor final a confirmar com `mvn clean test` na `main`.
+- **Medidas:** usar os números de `docs/metricas.md` e citar o PR de onde vêm. Total de testes por ponto no tempo: 33 (legado), 46, 26, 31, 43, 53, 67, 73, 75 e 79 na `main` final (contagem de `@Test` depois do PR #73).
 - **Citações:** só citar um autor com página se o texto passar a citá-lo diretamente. Paráfrases levam (AUTOR, ano).
 - **PRs e commits:** citar como evidência de participação no apêndice, ou em nota, e não no corpo do texto.
 
