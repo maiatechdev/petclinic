@@ -1,77 +1,93 @@
 ## 4.2 Débito técnico
 
-Durante a análise do Spring PetClinic, encontramos alguns problemas que dificultavam a manutenção do sistema. Mesmo funcionando, a versão antiga tinha código repetido, dependências entre componentes, métodos com várias condições e partes que precisavam de mais testes e documentação. Esses problemas são exemplos de débito técnico, pois tornam futuras alterações mais difíceis e demoradas.
+Durante a análise do Spring PetClinic, encontramos alguns problemas que dificultavam a manutenção do sistema. Mesmo funcionando, a versão antiga tinha código repetido, dependências entre componentes, métodos com várias condições e partes que precisavam de mais testes e documentação.
 
 Para entender a situação, analisamos cinco aspectos: acoplamento, duplicação, complexidade, documentação e testes automatizados. Utilizamos os levantamentos da Etapa 2 e as medições registradas em `docs/metricas.md`.
 
 ### Problemas encontrados
 
-**Acoplamento:** observamos as dependências entre as partes do sistema. Quando um componente depende muito de outros, uma mudança pode exigir alterações em vários arquivos.
+**Acoplamento:** a classe `Pet` apresentou acoplamento aferente de 13. Isso indica que outros componentes dependem dessa classe, exigindo cuidado durante alterações para evitar impactos em diferentes partes do sistema.
 
-**Duplicação:** identificamos diferentes implementações para operações semelhantes no banco de dados, usando JDBC, JPA e Spring Data JPA. O grupo removeu as implementações JDBC e JPA, mantendo o Spring Data JPA.
+**Duplicação:** identificamos três implementações de persistência, utilizando JDBC, JPA e Spring Data JPA, que somavam 504 NLOC. O grupo removeu as implementações JDBC e JPA, mantendo Spring Data JPA, reduzindo esse número para 40 NLOC. No diagnóstico da Etapa 2, também foram identificados 11 clones de código.
 
-**Complexidade:** avaliamos a quantidade de caminhos possíveis dentro dos métodos. Um caso importante foi `PetValidator.validate`, que apresentou complexidade ciclomática 7. Isso indica a necessidade de testar diferentes situações antes de modificar o método.
+**Complexidade:** o método `PetValidator.validate` apresentou complexidade ciclomática 7 (CCN 7), indicando diferentes caminhos de execução que precisam ser considerados durante os testes e as refatorações.
 
-**Documentação:** encontramos a necessidade de melhorar as explicações sobre classes e métodos, facilitando o entendimento do código por outros desenvolvedores.
+**Documentação:** dos 106 métodos analisados na Etapa 2, apenas 14 possuíam Javadoc, correspondendo a aproximadamente 13,2%. Esse resultado mostrou a necessidade de melhorar a documentação do sistema.
 
-**Testes:** alguns comportamentos não tinham testes específicos. Por isso, o grupo criou testes de caracterização antes de realizar determinadas mudanças.
-
-### Como medimos
-
-Usamos NLOC para medir linhas de código sem comentários e linhas vazias, complexidade ciclomática para avaliar os caminhos dos métodos, análise de acoplamento para observar dependências e ferramentas de detecção de duplicação. Também acompanhamos a documentação e a quantidade de testes automatizados.
-
-O Lizard foi utilizado para linhas de código e complexidade, enquanto o jscpd auxiliou na identificação de duplicações.
+**Testes automatizados:** a versão legada apresentava 33 execuções de testes. Durante a evolução do projeto, o grupo ampliou os testes para verificar o comportamento existente e reduzir o risco de regressões.
 
 ### Comparação antes e depois
 
-Na versão legada, identificada pelo commit `df1596b`, o levantamento inicial registrou 33 execuções de testes. Segundo a atualização da equipe em 23/11/2026, a `main` passou a apresentar 67 testes.
+| Indicador | Versão legada | Situação posterior |
+|---|---|---|
+| Acoplamento aferente da classe Pet | 13 | Nova medição não confirmada |
+| NLOC das implementações de persistência | 504 | 40 |
+| Clones de código | 11 | Nova medição não confirmada |
+| Métodos com Javadoc | 14 de 106 (13,2%) | Documentação ampliada |
+| Complexidade de PetValidator.validate | CCN 7 | Refatoração pendente |
+| Testes automatizados | 33 execuções | 67 execuções registradas em levantamento posterior do grupo |
 
-Na persistência, a retirada das implementações JDBC e JPA reduziu a repetição de código. Também houve ampliação dos testes e melhorias na documentação.
+Fonte: elaborado pelos autores com base no diagnóstico da Etapa 2, em `docs/metricas.md` e nos registros dos pull requests (2026).
 
-Entretanto, alguns problemas continuam pendentes. Um exemplo é a complexidade de `PetValidator.validate`, cuja refatoração foi planejada para outra etapa.
+A redução de 504 para 40 NLOC representa aproximadamente 92,1% de redução nas implementações de persistência. Essa mudança diminuiu a quantidade de código que precisa ser mantida.
 
-Os valores detalhados de NLOC, acoplamento, duplicação e documentação precisam ser conferidos em `docs/metricas.md` antes da consolidação final.
-
-### Análise
-
-Percebemos que modernizar o sistema não significa apenas trocar tecnologias. Também envolve organizar melhor o código, diminuir repetições, documentar funcionalidades e criar testes para evitar problemas durante a manutenção.
-
-O grupo conseguiu reduzir parte do débito técnico, mas registrou outras melhorias para trabalhos futuros.
+Os resultados mostram que parte do débito técnico foi tratada durante a evolução do sistema. Entretanto, ainda existem melhorias que precisam ser realizadas, principalmente em relação à complexidade, ao acoplamento e à documentação.
 
 ## 5.3 Domínio e validação de animais
 
-Nesta parte do trabalho, analisamos os componentes responsáveis pelo cadastro e pela edição dos animais no Spring PetClinic, principalmente `PetController`, `PetValidator` e `PetTypeFormatter`.
-
 ### Diagnóstico
 
-Durante a análise, percebemos uma diferença importante entre as regras do cadastro e da edição de animais. No cadastro, o sistema verifica se o tutor já possui outro animal com o mesmo nome e exige a escolha de um tipo. Na edição, essas duas verificações não são aplicadas da mesma forma.
+A análise do domínio de animais concentrou-se nas classes `PetController`, `PetValidator` e `PetTypeFormatter`, responsáveis pelo processamento, pela validação e pela conversão das informações relacionadas aos animais.
 
-Essa diferença chamou nossa atenção porque uma pessoa poderia imaginar que as regras seriam iguais nas duas operações. Por isso, consideramos importante registrar o comportamento existente antes de alterar o código.
+Durante a análise, identificamos uma diferença entre as regras de cadastro e edição. A verificação de nomes duplicados entre animais do mesmo tutor e a obrigatoriedade do tipo são aplicadas no cadastro, mas não na edição.
 
-Também identificamos que `PetValidator.validate` possui complexidade ciclomática 7, uma das maiores do projeto, o que exige cuidado durante futuras refatorações.
+Também identificamos que o método `PetValidator.validate` apresenta complexidade ciclomática 7 (CCN 7). Por isso, a criação de testes de caracterização é importante para registrar o comportamento existente antes de realizar alterações estruturais.
 
 ### Testes realizados
 
-Criamos testes para verificar o comportamento de `PetTypeFormatter` em três situações: quando recebe um tipo existente, quando recebe um tipo desconhecido e quando precisa transformar um tipo de animal em texto.
+O PR #54 registra 14 testes relacionados ao módulo de animais.
 
-No `PetValidator`, acrescentamos um teste para verificar o tratamento de uma data de nascimento nula.
+Criamos 7 testes do `PetController` com Mockito. Os testes com MockMvc ficaram como trabalho futuro.
 
-Esses testes ajudam a confirmar que o comportamento atual continua funcionando após futuras mudanças.
+Como complemento à issue #32, foram desenvolvidos quatro novos testes na branch `feature/i4-pet-formatter-tests`.
 
-Também iniciamos testes com MockMvc para simular requisições de cadastro e edição de animais no `PetController`. Durante essa etapa, alguns cenários apresentaram falhas e ainda precisavam de ajustes na última execução acompanhada.
+No `PetTypeFormatter`, foram acrescentados três testes:
+
+- Conversão de um tipo de animal existente.
+- Tratamento de um tipo desconhecido por meio de `ParseException`.
+- Conversão de um tipo de animal para sua representação textual.
+
+No `PetValidator`, foi acrescentado um teste para verificar se a ausência da data de nascimento gera o erro de validação `required`.
+
+Para verificar o funcionamento dessas duas classes de testes, executamos o comando:
+
+`mvn -Dtest=PetTypeFormatterTests,PetValidatorTests test`
+
+**Quadro — Resultado da execução dos testes**
+
+| Indicador | Resultado |
+|---|---|
+| Testes executados | 11 |
+| Falhas | 0 |
+| Erros | 0 |
+| Testes ignorados | 0 |
+| Tempo de execução | 5,782 segundos |
+| Resultado | BUILD SUCCESS |
+
+Fonte: elaborado pelos autores a partir da execução dos testes no Codespaces (2026).
+
+Os 11 testes correspondem ao total executado nas duas classes, incluindo os quatro novos testes. As alterações foram publicadas na branch de desenvolvimento para revisão.
 
 ### Antes e depois
 
-**Antes:** não tínhamos os testes específicos acrescentados nesta atividade para determinados comportamentos de conversão e validação dos animais. Além disso, o método de validação concentrava várias condições.
+**Antes:** os cenários específicos de conversão dos tipos de animais e de validação da data de nascimento nula não possuíam os testes adicionais desenvolvidos nesta etapa.
 
-**Depois da etapa de testes:** ampliamos a verificação automática de `PetTypeFormatter` e `PetValidator`, criando uma base mais segura para mudanças futuras.
-
-A refatoração estrutural prevista na issue #33 ainda não havia sido concluída no levantamento do grupo. Por isso, não afirmamos que a complexidade do método foi reduzida.
+**Depois:** foram acrescentados quatro testes de caracterização, permitindo verificar esses comportamentos sem modificar o código de produção.
 
 ### Resultados e trabalho futuro
 
-O principal resultado dessa etapa foi entender melhor o comportamento do módulo de animais e criar testes para proteger suas funcionalidades.
+A principal contribuição desta etapa foi ampliar os testes de caracterização do módulo de animais, permitindo compreender melhor o comportamento existente e reduzir os riscos de futuras alterações.
 
-A próxima etapa será concluir os testes do controller, realizar a refatoração planejada e comparar os resultados antes e depois das alterações.
+A refatoração estrutural prevista na issue #33 permanece como trabalho futuro. Portanto, não é possível afirmar que houve redução da complexidade ciclomática do método `PetValidator.validate` ou uniformização das regras de cadastro e edição.
 
-Assim, conseguimos avançar na manutenção do sistema sem modificar suas regras de negócio de maneira inesperada.
+Dessa forma, o trabalho realizado contribuiu para preparar o módulo de animais para futuras refatorações, mantendo o comportamento existente do sistema.
