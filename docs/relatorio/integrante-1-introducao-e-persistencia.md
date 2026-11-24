@@ -26,7 +26,7 @@ Salvador
 
 ## 1 INTRODUÇÃO
 
-Sistemas de software continuam em uso muito depois de terem sido escritos, e é durante esse uso que a maior parte do custo aparece. Sommerville (2019) trata a evolução como a continuação do desenvolvimento após a entrega, e a reengenharia como o conjunto de atividades que torna um sistema existente mais fácil de manter sem alterar o que ele faz. Feathers (2013) chama de código legado aquele que não tem testes, porque sem eles ninguém consegue alterá-lo com segurança. Fowler (2020) define a refatoração como a mudança da estrutura interna do código sem mudar o seu comportamento observável.
+Sistemas de software continuam em uso muito depois de terem sido escritos, e é nesse período que está a maior parte do custo de manutenção. A refatoração, entendida como a mudança da estrutura interna do código sem alterar o seu comportamento observável (FOWLER, 2020), e os testes que protegem esse comportamento (FEATHERS, 2013) são as ferramentas centrais deste trabalho. Os conceitos são detalhados na seção 2.
 
 Este trabalho aplica esses conceitos a um sistema real. Escolhemos o Spring PetClinic, aplicação de referência do ecossistema Spring que gerencia uma clínica veterinária (tutores, animais, visitas e veterinários), em uma versão de agosto de 2014 (commit `df1596b`, marcado como `v0-legado` no repositório do grupo). Essa revisão usa Spring 4.0, Hibernate 4.3, páginas JSP, Ehcache 2 e Bootstrap 2, e não possui documentação de requisitos nem testes de controllers. O repositório do trabalho é um fork público em `github.com/maiatechdev/petclinic`.
 
@@ -50,7 +50,7 @@ Toda a execução usou JDK 8 (Amazon Corretto 8u514) e Maven 3.9.14, em Windows 
 
 ### 1.3 Estrutura do trabalho
 
-A seção 2 descreve o sistema legado: ficha técnica, funcionalidades e requisitos. A seção 3 trata da persistência e da configuração, módulo que o Integrante 1 refatorou. As demais seções, escritas pelos outros integrantes, tratam da fundamentação teórica, da arquitetura e dos controllers, do domínio, da plataforma, da documentação e da conclusão.
+A seção 2 apresenta a fundamentação teórica e a seção 3 descreve o sistema legado: ficha técnica, funcionalidades e requisitos. A seção 4 traz o diagnóstico, com a arquitetura e o débito técnico. A seção 5 registra as refatorações aplicadas, com o Antes e o Depois de cada módulo, e a seção 6 apresenta os planos de modularização e de atualização tecnológica. A seção 7 discute a viabilidade e faz a análise crítica, e a seção 8 conclui o trabalho.
 
 ---
 
@@ -158,7 +158,7 @@ Para trocar de banco, basta iniciar a aplicação com `-Dpetclinic.db=mysql` (ou
 
 ### 3.3 Resultados
 
-O Quadro 3 reúne as medições. Os valores de código vêm do Lizard 1.26.1 e os de tempo, de três rodadas de `mvn clean test` por revisão, alternando a ordem entre elas, com a mediana apresentada.
+O quadro a seguir reúne as medições. Os valores de código vêm do Lizard 1.26.1 e os de tempo, de três rodadas de `mvn clean test` por revisão, alternando a ordem entre elas, com a mediana apresentada.
 
 **Quadro 3 - Persistência antes e depois da refatoração**
 
